@@ -1,0 +1,35 @@
+CREATE DATABASE EM_System;
+USE EM_System;
+
+DROP TABLE IF EXISTS Account;
+CREATE TABLE EM_System.Account (
+    account_id bigint NOT NULL PRIMARY KEY,
+    balance double NOT NULL DEFAULT 0.0,
+    version int NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS Position;
+CREATE TABLE EM_System.Position (
+    pos_id bigint NOT NULL PRIMARY KEY,
+    symbol_name varchar(50) NOT NULL,
+    amount bigint DEFAULT 0,
+    version int NOT NULL DEFAULT 0,
+    account_id bigint NOT NULL,
+    FOREIGN KEY Acc_Pos(account_id)
+    REFERENCES Account(account_id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS Order;
+CREATE TABLE EM_System.Order(
+    order_id bigint NOT NULL PRIMARY KEY,
+    symbol_name varchar(50) NOT NULL,
+    amount bigint DEFAULT 0,
+    type int NOT NULL DEFAULT 0,
+    account_id bigint NOT NULL,
+    FOREIGN KEY Acc_Order(account_id)
+    REFERENCES Account(account_id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+    )ENGINE = InnoDB DEFAULT CHARSET=utf8;

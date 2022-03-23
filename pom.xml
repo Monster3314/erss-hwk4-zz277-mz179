@@ -5,31 +5,72 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>Exchange Matching System</artifactId>
+    <artifactId>EM_System</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/Java</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.* </include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
     <dependencies>
+        <!--        1.导入mybatis包-->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.5.6</version>
+            <version>3.5.2</version>
         </dependency>
+        <!--        2。导入数据库驱动包-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.25</version>
+            <version>5.1.47</version>
         </dependency>
+        <!--   注意：如果出现Unkonw 。。。launge的，是本机安装的mysql版本太低
+      此时换一个低版本的驱动包就好了，例如换成5.1.28或者5.1.24
+        5.1.24版本代码：
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.24</version>
+        </dependency>
+        5.1.28版本代码：
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.28</version>
+        </dependency>
+        -->
+
+
+        <!--        3.导入测试包-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.2</version>
+            <version>RELEASE</version>
+            <scope>test</scope>
         </dependency>
+
     </dependencies>
+
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
