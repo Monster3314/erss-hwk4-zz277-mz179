@@ -10,7 +10,7 @@
     <select id="getAccByID" resultType="com.EM_System.pojo.Account" parameterType="int" resultMap="MyFull">
         select *
         from EM_System.account
-        where account_id = #{account_id} and version = #{version};
+        where account_id = #{account_id};
     </select>
 
     <delete id="deleteAcc" parameterType="int">
@@ -21,9 +21,9 @@
 
     <update id="updateAcc" parameterType="com.EM_System.pojo.Account">
         update EM_System.account
-        set account_id=#{account_id},
-            balance=#{balance},
-            version=#{version}
+        set account_id = #{account_id},
+            balance = #{balance},
+            version = version + 1
         where account_id = #{account_id} and version = #{version};
     </update>
 

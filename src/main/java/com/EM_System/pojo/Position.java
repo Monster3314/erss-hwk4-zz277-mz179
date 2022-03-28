@@ -15,6 +15,10 @@ public class Position {
         this.symbol_name = symbol_name;
     }
 
+    @Override
+    public String toString() {
+        return "(account_id: " + account_id + ", amount: " + amount + ", symbol: " + symbol_name + ")";
+    }
 }
 
 

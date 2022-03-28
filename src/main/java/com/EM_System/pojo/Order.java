@@ -29,4 +29,8 @@ public class Order {
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
+    @Override
+    public String toString() {
+        return "(id: " + order_id + ", account_id: " + account_id + ", amount: " + amount + ", symbol: " + symbol + ", limit: " + price + ")";
+    }
 }

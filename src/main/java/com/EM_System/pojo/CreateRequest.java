@@ -10,4 +10,9 @@ public class CreateRequest implements Request{
         this.accounts = accounts;
         this.positions = positions;
     }
+
+    @Override
+    public String toString() {
+        return "accounts: " + accounts + "\npositions: " + positions;
+    }
 }

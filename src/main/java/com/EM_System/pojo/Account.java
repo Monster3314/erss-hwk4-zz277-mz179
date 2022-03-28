@@ -13,6 +13,10 @@ public class Account {
         this.balance = balance;
     }
 
+    @Override
+    public String toString() {
+        return "(account_id: " + account_id + ", balance: " + balance + ")";
+    }
 }
 
 

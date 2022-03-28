@@ -38,36 +38,35 @@ public class XmlParser {
     }
 
     private CreateRequest parseCreateRequest(Element root) {
-        NodeList accountList = root.getElementsByTagName("account");
-        NodeList symbolList = root.getElementsByTagName("symbol");
         ArrayList<Account> accounts = new ArrayList<>();
         ArrayList<Position> positions = new ArrayList<>();
 
-        for (int i = 0; i < accountList.getLength(); i++) {
-            Node node = accountList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element account = (Element) node;
-                // TODO: NumberFormatException
-                int id = Integer.parseInt(account.getAttribute("id"));
-                double balance = Double.parseDouble(account.getAttribute("balance"));
-                accounts.add(new Account(id, balance));
-            }
-        }
+        NodeList nodeList = root.getChildNodes();
 
-        for (int i = 0; i < symbolList.getLength(); i++) {
-            Node node = symbolList.item(i);
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element symbol = (Element) node;
-                String symName = symbol.getAttribute("sym");
-                NodeList symbols = symbol.getElementsByTagName("account");
-                for (int j = 0; j < symbols.getLength(); j++) {
-                    Node symNode = symbols.item(j);
-                    if (symNode.getNodeType() == Node.ELEMENT_NODE) {
-                        Element sym = (Element) symNode;
-                        // TODO: NumberFormatException
-                        int id = Integer.parseInt(sym.getAttribute("id"));
-                        int num = Integer.parseInt(sym.getTextContent());
-                        positions.add(new Position(id, num, symName));
+                String name = node.getNodeName();
+                if (name.equals("account")) {
+                    Element account = (Element) node;
+                    // TODO: NumberFormatException
+                    int id = Integer.parseInt(account.getAttribute("id"));
+                    double balance = Double.parseDouble(account.getAttribute("balance"));
+                    accounts.add(new Account(id, balance));
+                }
+                else if (name.equals("symbol")) {
+                    Element symbol = (Element) node;
+                    String symName = symbol.getAttribute("sym");
+                    NodeList symbols = symbol.getElementsByTagName("account");
+                    for (int j = 0; j < symbols.getLength(); j++) {
+                        Node symNode = symbols.item(j);
+                        if (symNode.getNodeType() == Node.ELEMENT_NODE) {
+                            Element sym = (Element) symNode;
+                            // TODO: NumberFormatException
+                            int id = Integer.parseInt(sym.getAttribute("id"));
+                            int num = Integer.parseInt(sym.getTextContent());
+                            positions.add(new Position(id, num, symName));
+                        }
                     }
                 }
             }
