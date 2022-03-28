@@ -1,6 +1,5 @@
 package com.EM_System.pojo;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Order {
@@ -18,8 +17,11 @@ public class Order {
 
     }
 
-    public Order(int id, int amount, Double price, String symbol, int account_id) {
+    public Order(int id) {
         this.order_id = id;
+    }
+
+    public Order(int amount, Double price, String symbol, int account_id) {
         this.amount = amount;
         this.price = price;
         this.symbol = symbol;
