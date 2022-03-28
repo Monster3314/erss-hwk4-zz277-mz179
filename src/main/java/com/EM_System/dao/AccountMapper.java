@@ -1,5 +1,6 @@
 package com.EM_System.dao;
 import com.EM_System.pojo.Account;
+import com.EM_System.pojo.Position;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface AccountMapper {
 
     int updateAcc(Account account);
 
-    int addStu(Account account);
+    int addAcc(Account account);
 
 }
 

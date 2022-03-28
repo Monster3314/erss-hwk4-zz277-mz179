@@ -46,7 +46,23 @@ public class MyTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @Test
+    public void addAcc() {
+        try {
+            String resource = "mybatis-config.xml";
+            InputStream inputStream = Resources.getResourceAsStream(resource);
+            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+            SqlSession sqlSession = sqlSessionFactory.openSession(true);
+            AccountMapper mapper = sqlSession.getMapper(AccountMapper.class);
+            Account ac = new Account(4, 5.00);
+            int acId = mapper.addAcc(ac);
+            System.out.println(acId);
+            sqlSession.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

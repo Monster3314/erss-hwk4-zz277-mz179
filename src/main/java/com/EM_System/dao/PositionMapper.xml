@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.EM_System.dao.PositionMapper">
+
+    <select id="getPositionByID" resultType="com.EM_System.pojo.Position" parameterType="int" resultMap="MyFull">
+        select *
+        from EM_System.Position
+        where account_id = #{account_id};
+    </select>
+
+    <insert id="createPosition" parameterType="com.EM_System.pojo.Position">
+        insert into EM_System.position
+            (symbol_name, amount, account_id, 1)
+        values (#{symbol_name}, #{amount}, #{account_id});
+    </insert>
+
+    <update id="updatePosition" parameterType="com.EM_System.pojo.Position">
+        update EM_System.position
+        set amount = #{amount},
+            version = version + 1
+        where account_id = #{order_id} and symbol_name = #{symbol_name}
+          and version = #{version}
+    </update>
+
+    <resultMap id="MyFull" type="com.EM_System.pojo.Position">
+        <result property="symbol_name" column="symbol_name"></result>
+        <result property="amount" column="amount"></result>
+        <result property="account_id" column="account_id"></result>
+    </resultMap>
+
+</mapper>
+
+

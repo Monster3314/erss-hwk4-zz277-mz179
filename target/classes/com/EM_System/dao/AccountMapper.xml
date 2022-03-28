@@ -10,31 +10,31 @@
     <select id="getAccByID" resultType="com.EM_System.pojo.Account" parameterType="int" resultMap="MyFull">
         select *
         from EM_System.account
-        where id = #{id} and version = #{version};
+        where account_id = #{account_id} and version = #{version};
     </select>
 
     <delete id="deleteAcc" parameterType="int">
         delete
         from EM_System.account
-        where id = #{id} and version = #{version};
+        where account_id = #{account_id} and version = #{version};
     </delete>
 
     <update id="updateAcc" parameterType="com.EM_System.pojo.Account">
         update EM_System.account
-        set id=#{id},
+        set account_id=#{account_id},
             balance=#{balance},
             version=#{version}
-        where id = #{id} and version = #{version};
+        where account_id = #{account_id} and version = #{version};
     </update>
 
     <insert id="addAcc" parameterType="com.EM_System.pojo.Account">
         insert into EM_System.account
-            (id, balance, version)
-        values (#{id}, #{balance}, #{version});
+            (account_id, balance, version)
+        values (#{account_id}, #{balance}, #{version});
     </insert>
 
     <resultMap id="MyFull" type="com.EM_System.pojo.Account">
-        <id property="id" column="id"></id>
+        <id property="account_id" column="account_id"></id>
         <result property="balance" column="balance"></result>
         <result property="version" column="version"></result>
     </resultMap>

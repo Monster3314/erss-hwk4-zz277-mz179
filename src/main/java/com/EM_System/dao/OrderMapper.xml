@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.EM_System.dao.OrderMapper">
+    <select id="getOrderByID" resultType="com.EM_System.pojo.Order" parameterType="int" resultMap="MyFull">
+        select *
+        from EM_System.Order
+        where order_id = #{order_id};
+    </select>
+
+    <insert id="createOrder" parameterType="com.EM_System.pojo.Order">
+        insert into EM_System.Order
+            (amount, price, symbol, account_id, state, time, version)
+        values (#{amount}, #{price}, #{symbol}, #{account_id}, 0, #{timestamp}, 1);
+    </insert>
+
+    <update id="updateOrder" parameterType="com.EM_System.pojo.Order">
+        update EM_System.Order
+        set amount = #{amount},
+            state = #{state},
+            version = version + 1
+        where order_id = #{order_id}
+          and version = #{version}
+    </update>
+
+    <resultMap id="MyFull" type="com.EM_System.pojo.Order">
+        <id property="order_id" column="order_id"></id>
+        <result property="amount" column="amount"></result>
+        <result property="price" column="price"></result>
+        <result property="symbol" column="symbol"></result>
+        <result property="account_id" column="account_id"></result>
+        <result property="state" column="state"></result>
+        <result property="timestamp" column="time"></result>
+        <result property="version" column="version"></result>
+    </resultMap>
+
+</mapper>
+
+

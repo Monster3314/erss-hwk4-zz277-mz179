@@ -1,6 +1,9 @@
 CREATE DATABASE EM_System;
 USE EM_System;
 
+DROP TYPE IF EXISTS states;
+CREATE TYPE states AS ENUM ('open', 'canceled', 'executed');
+
 DROP TABLE IF EXISTS Account;
 CREATE TABLE EM_System.Account (
     account_id bigint NOT NULL PRIMARY KEY,
@@ -21,15 +24,16 @@ CREATE TABLE EM_System.Position (
     ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS Order;
-CREATE TABLE EM_System.Order(
-    order_id bigint NOT NULL PRIMARY KEY,
+DROP TABLE IF EXISTS OpenOrder;
+CREATE TABLE EM_System.OpenOrder(
+    order_id SERIAL PRIMARY KEY,
     symbol_name varchar(50) NOT NULL,
     amount bigint DEFAULT 0,
-    type int NOT NULL DEFAULT 0,
+    price double NOT NULL DEFAULT 0.0,
+    state states,
     account_id bigint NOT NULL,
     FOREIGN KEY Acc_Order(account_id)
     REFERENCES Account(account_id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT
-    )ENGINE = InnoDB DEFAULT CHARSET=utf8;
+)ENGINE = InnoDB DEFAULT CHARSET=utf8;
