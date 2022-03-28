@@ -1,7 +1,6 @@
 package com.EM_System.dao;
 
 import com.EM_System.pojo.ExecutedOrder;
-import com.EM_System.pojo.Order;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

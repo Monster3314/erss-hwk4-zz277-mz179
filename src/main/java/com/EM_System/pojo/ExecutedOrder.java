@@ -1,6 +1,5 @@
 package com.EM_System.pojo;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public class ExecutedOrder {
