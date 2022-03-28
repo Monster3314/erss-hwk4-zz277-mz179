@@ -3,6 +3,7 @@ package com.EM_System.pojo;
 public class Account {
     private int account_id;
     private Double balance;
+    private int version;
 
     public Account() {
 
