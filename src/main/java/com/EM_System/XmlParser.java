@@ -5,6 +5,8 @@ import com.EM_System.pojo.Request;
 import com.EM_System.pojo.TransactionsRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -24,13 +26,13 @@ public class XmlParser {
 
     public Request parse(InputStream inputStream) throws IOException, SAXException {
         Document document = builder.parse(inputStream);
-        Element element = document.getDocumentElement();
-        String name = element.getNodeName();
+        Element root = document.getDocumentElement();
+        String name = root.getNodeName();
         if (name.equals("create")) {
-            return parseCreateRequest(element);
+            return parseCreateRequest(root);
         }
         else if (name.equals("transactions")) {
-            return parseTransactionsRequest(element);
+            return parseTransactionsRequest(root);
         }
         else {
             // TODO: error msg
@@ -38,11 +40,34 @@ public class XmlParser {
         }
     }
 
-    private CreateRequest parseCreateRequest(Element element) {
+    private CreateRequest parseCreateRequest(Element root) {
+        NodeList accountList = root.getElementsByTagName("account");
+        NodeList symbolList = root.getElementsByTagName("symbol");
+
+        for (int i = 0; i < accountList.getLength(); i++) {
+            Node node = accountList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element account = (Element) node;
+                // TODO: NumberFormatException
+                int id = Integer.parseInt(account.getAttribute("id"));
+                double balance = Double.parseDouble(account.getAttribute("balance"));
+            }
+        }
+
+        for (int i = 0; i < symbolList.getLength(); i++) {
+            Node node = symbolList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element symbol = (Element) node;
+                // TODO: NumberFormatException
+                int id = Integer.parseInt(symbol.getAttribute("id"));
+                int num = Integer.parseInt(symbol.getTextContent());
+            }
+        }
+
         return new CreateRequest();
     }
 
-    private TransactionsRequest parseTransactionsRequest(Element element) {
+    private TransactionsRequest parseTransactionsRequest(Element root) {
         return new TransactionsRequest();
     }
 }
