@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PositionMapper {
 
-    List<Position> getPositionByID(@Param("account_id") int account_id);
+    Position getSpecificPosition(@Param("account_id") int account_id, String symbol_name);
 
     int createPosition(Position position);
 
