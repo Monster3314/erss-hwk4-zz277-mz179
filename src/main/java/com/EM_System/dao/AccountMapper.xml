@@ -21,8 +21,7 @@
 
     <update id="updateAcc" parameterType="com.EM_System.pojo.Account">
         update EM_System.account
-        set account_id = #{account_id},
-            balance = #{balance},
+        set balance = #{balance},
             version = version + 1
         where account_id = #{account_id} and version = #{version};
     </update>
