@@ -32,6 +32,8 @@ CREATE TABLE EM_System.Order(
     version int NOT NULL DEFAULT 0
 )ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
+create index idx_order on EM_System.Order(state, symbol_name, amount, price);
+
 DROP TABLE IF EXISTS ExecutedOrder;
 CREATE TABLE EM_System.ExecutedOrder(
     execution_id SERIAL PRIMARY KEY,
@@ -41,3 +43,5 @@ CREATE TABLE EM_System.ExecutedOrder(
     sell_id bigint NOT NULL,
     time TIMESTAMP NOT NULL
 )ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+create index idx_executed_order on EM_System.ExecutedOrder(buy_id, sell_id);
