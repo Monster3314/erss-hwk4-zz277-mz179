@@ -10,17 +10,25 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
 import java.util.ArrayList;
 
 public class XmlParser {
 
     private final DocumentBuilder builder;
+    private final Transformer transformer;
 
-    public XmlParser() throws ParserConfigurationException {
+    public XmlParser() throws ParserConfigurationException, TransformerConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         this.builder = factory.newDocumentBuilder();
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        this.transformer = transformerFactory.newTransformer();
     }
 
     public Request parse(InputStream inputStream) throws IOException, SAXException {
@@ -38,8 +46,7 @@ public class XmlParser {
     }
 
     private CreateRequest parseCreateRequest(Element root) {
-        ArrayList<Account> accounts = new ArrayList<>();
-        ArrayList<Position> positions = new ArrayList<>();
+        ArrayList<CreateRequestItem> requestItems = new ArrayList<>();
 
         NodeList nodeList = root.getChildNodes();
 
@@ -52,7 +59,7 @@ public class XmlParser {
                     // TODO: NumberFormatException
                     int id = Integer.parseInt(account.getAttribute("id"));
                     double balance = Double.parseDouble(account.getAttribute("balance"));
-                    accounts.add(new Account(id, balance));
+                    requestItems.add(new Account(id, balance));
                 }
                 else if (name.equals("symbol")) {
                     Element symbol = (Element) node;
@@ -65,14 +72,14 @@ public class XmlParser {
                             // TODO: NumberFormatException
                             int id = Integer.parseInt(sym.getAttribute("id"));
                             int num = Integer.parseInt(sym.getTextContent());
-                            positions.add(new Position(id, num, symName));
+                            requestItems.add(new Position(id, num, symName));
                         }
                     }
                 }
             }
         }
 
-        return new CreateRequest(accounts, positions);
+        return new CreateRequest(requestItems);
     }
 
     private TransactionsRequest parseTransactionsRequest(Element root) {
@@ -97,14 +104,14 @@ public class XmlParser {
             }
         }
 
-        ParseQueryAndCancel(queries, queryList);
+        parseQueryAndCancel(queries, queryList);
 
-        ParseQueryAndCancel(cancels, cancelList);
+        parseQueryAndCancel(cancels, cancelList);
 
         return new TransactionsRequest(orders, queries, cancels);
     }
 
-    private void ParseQueryAndCancel(ArrayList<Order> transactions, NodeList nodeList) {
+    private void parseQueryAndCancel(ArrayList<Order> transactions, NodeList nodeList) {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -113,5 +120,15 @@ public class XmlParser {
                 transactions.add(new Order(id));
             }
         }
+    }
+
+    public void CreateXmlResponse(OutputStream os) throws TransformerException {
+        Document document = builder.newDocument();
+        Element root = document.createElement("results");
+        document.appendChild(root);
+
+        DOMSource domSource = new DOMSource(document);
+        StreamResult result = new StreamResult(os);
+        transformer.transform(domSource, result);
     }
 }

@@ -1,6 +1,6 @@
 package com.EM_System.pojo;
 
-public class Position {
+public class Position implements CreateRequestItem {
     private int account_id;
     private int amount;
     private String symbol_name;

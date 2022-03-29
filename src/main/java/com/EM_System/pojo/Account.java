@@ -1,6 +1,6 @@
 package com.EM_System.pojo;
 
-public class Account {
+public class Account implements CreateRequestItem {
     private int account_id;
     private Double balance;
     private int version;
