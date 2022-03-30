@@ -35,6 +35,9 @@
     <!--  将写好的sql映射文件注册到全局配置文件mybatis-config.xml中  -->
     <mappers>
         <mapper resource="com/EM_System/dao/AccountMapper.xml"/>
+        <mapper resource="com/EM_System/dao/PositionMapper.xml"/>
+        <mapper resource="com/EM_System/dao/OrderMapper.xml"/>
+        <mapper resource="com/EM_System/dao/ExecutedOrderMapper.xml"/>
     </mappers>
 
 </configuration>

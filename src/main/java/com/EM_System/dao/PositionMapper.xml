@@ -12,13 +12,13 @@
     </select>
 
     <insert id="createPosition" parameterType="com.EM_System.pojo.Position">
-        insert into EM_System.position
+        insert into EM_System.Position
             (symbol_name, amount, account_id, 1)
         values (#{symbol_name}, #{amount}, #{account_id});
     </insert>
 
     <update id="editPosition" parameterType="com.EM_System.pojo.Position">
-        update EM_System.position
+        update EM_System.Position
         set amount = #{amount},
             version = version + 1
         where account_id = #{order_id} and symbol_name = #{symbol_name} and version = #{version}

@@ -5,29 +5,29 @@
 
 <mapper namespace="com.EM_System.dao.AccountMapper">
     <select id="getAccList" resultType="com.EM_System.pojo.Account" resultMap="MyFull">
-        select * from EM_System.account;
+        select * from EM_System.Account;
     </select>
     <select id="getAccByID" resultType="com.EM_System.pojo.Account" parameterType="int" resultMap="MyFull">
         select *
-        from EM_System.account
+        from EM_System.Account
         where account_id = #{account_id};
     </select>
 
     <delete id="deleteAcc" parameterType="int">
         delete
-        from EM_System.account
+        from EM_System.Account
         where account_id = #{account_id} and version = #{version};
     </delete>
 
     <update id="updateAcc" parameterType="com.EM_System.pojo.Account">
-        update EM_System.account
+        update EM_System.Account
         set balance = #{balance},
             version = version + 1
         where account_id = #{account_id} and version = #{version};
     </update>
 
     <insert id="addAcc" parameterType="com.EM_System.pojo.Account">
-        insert into EM_System.account
+        insert into EM_System.Account
             (account_id, balance, version)
         values (#{account_id}, #{balance}, #{version});
     </insert>

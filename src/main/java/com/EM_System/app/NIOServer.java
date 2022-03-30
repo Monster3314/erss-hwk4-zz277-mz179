@@ -3,31 +3,37 @@ package com.EM_System.app;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.*;
 import com.EM_System.XmlParser;
 import com.EM_System.pojo.Account;
 import com.EM_System.pojo.Request;
+import com.EM_System.pojo.Result;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 
 
 public class NIOServer {
 
     public static final ThreadPoolExecutor executor
             = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-    static final String SERVER_IP = "127.0.0.1";
+    static final String SERVER_IP = "152.3.77.189";
     public static final int SERVER_PORT = 12345;
     public static final char REQUEST_END_CHAR = '#';
-    XmlParser parser = new XmlParser();
+
 
     public NIOServer() throws TransformerConfigurationException, ParserConfigurationException {
     }
@@ -52,7 +58,7 @@ public class NIOServer {
         serverChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
-//            System.out.println("Listening on：" + serverPort);
+            // System.out.println("Listening on：" + serverPort);
             // 6.Join here, until qualified channel appeared
             if (selector.select() <= 0) {
                 continue;
@@ -97,19 +103,38 @@ public class NIOServer {
 
                                     // ############# 业务处理开始 ############
                                     // 英文字符串转大写
-                                    String recv = new String(baos.toByteArray()).toUpperCase();
-                                    // ############# 业务处理 结束 ############
-                                    Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
-                                    if(req.getClass().equals(Account)){
+                                    String recv = new String(baos.toByteArray()).toLowerCase().split("\r\n\r\n")[1];
 
-                                    }
+                                    System.out.println(recv);
+                                    baos.flush();
+                                    baos.reset();
+                                    // ############# 业务处理 结束 ############
+                                    XmlParser parser = new XmlParser();
+                                    Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
+                                    ArrayList<Result> res;
+                                    RequestExecutor executor = new RequestExecutor();
+                                    res = req.exec(executor);
+                                    parser.CreateXmlResponse(baos, res);
+                                    StringBuffer sb = new StringBuffer();
+                                    String ans = new String(baos.toByteArray());
+                                    sb.append("HTTP/1.1 200 OK\n" +
+                                            "Content-Type: xml\n" +
+                                            "Content-Length:" + ans.length() + "\n" +
+                                            "Connection: Closed\r\n\r\n");
+                                    sb.append(ans);
+                                    String resp = sb.toString();
+                                    System.out.println(resp);
                                     // 业务处理结果返回将数据添加到key中
                                     baos.close();
-                                    key.attach(recv);
+                                    key.attach(resp);
                                     key.interestOps(SelectionKey.OP_WRITE);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 } catch (SAXException e) {
+                                    e.printStackTrace();
+                                } catch (TransformerException e) {
+                                    e.printStackTrace();
+                                } catch (ParserConfigurationException e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -117,9 +142,8 @@ public class NIOServer {
                     } else if (key.isWritable()) {
                         key.cancel();
                         SocketChannel channel = (SocketChannel) key.channel();
-                        String recv = (String) key.attachment();
-
-                        channel.write(ByteBuffer.wrap(recv.getBytes()));
+                        String resp = (String) key.attachment();
+                        channel.write(ByteBuffer.wrap(resp.getBytes()));
 
                     }
                 } catch (IOException e) {
@@ -136,7 +160,7 @@ public class NIOServer {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, TransformerConfigurationException, ParserConfigurationException {
         NIOServer server = new NIOServer();
         try {
             server.startServer(SERVER_IP, SERVER_PORT);
