@@ -1,5 +1,6 @@
 package com.EM_System.app;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,6 +12,10 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.concurrent.*;
 import com.EM_System.XmlParser;
+import com.EM_System.pojo.Account;
+import com.EM_System.pojo.Request;
+import org.xml.sax.SAXException;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 
@@ -22,6 +27,10 @@ public class NIOServer {
     static final String SERVER_IP = "127.0.0.1";
     public static final int SERVER_PORT = 12345;
     public static final char REQUEST_END_CHAR = '#';
+    XmlParser parser = new XmlParser();
+
+    public NIOServer() throws TransformerConfigurationException, ParserConfigurationException {
+    }
 
     public void startServer(String serverIP, int serverPort) throws IOException, InterruptedException {
 
@@ -90,12 +99,17 @@ public class NIOServer {
                                     // 英文字符串转大写
                                     String recv = new String(baos.toByteArray()).toUpperCase();
                                     // ############# 业务处理 结束 ############
+                                    Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
+                                    if(req.getClass().equals(Account)){
 
+                                    }
                                     // 业务处理结果返回将数据添加到key中
                                     baos.close();
                                     key.attach(recv);
                                     key.interestOps(SelectionKey.OP_WRITE);
                                 } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (SAXException e) {
                                     e.printStackTrace();
                                 }
                             }

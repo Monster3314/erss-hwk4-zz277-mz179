@@ -41,7 +41,7 @@ public class RequestExecutor {
         }
         // TODO: check valid position amount
         addPosition(position);
-        return new Result("created", attr, null, new ArrayList<>())
+        return new Result("created", attr, null, new ArrayList<>());
     }
 
     private void addPosition(Position position) {
@@ -62,15 +62,15 @@ public class RequestExecutor {
         }
     }
 
-    public Result executeCancel(Order order) {
-        int accountId = order.getAccountId();
-        Account account = accountMapper.getAccByID(accountId);
-
-    }
-
-    public Result executeQuery(Order order) {
-
-    }
+//    public Result executeCancel(Order order) {
+//        int accountId = order.getAccountId();
+//        Account account = accountMapper.getAccByID(accountId);
+//
+//    }
+//
+//    public Result executeQuery(Order order) {
+//
+//    }
 
 
 }
