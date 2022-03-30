@@ -60,8 +60,7 @@ public class XmlParser {
                     int id = Integer.parseInt(account.getAttribute("id"));
                     double balance = Double.parseDouble(account.getAttribute("balance"));
                     requestItems.add(new Account(id, balance));
-                }
-                else if (name.equals("symbol")) {
+                } else if (name.equals("symbol")) {
                     Element symbol = (Element) node;
                     String symName = symbol.getAttribute("sym");
                     NodeList symbols = symbol.getElementsByTagName("account");
@@ -83,43 +82,39 @@ public class XmlParser {
     }
 
     private TransactionsRequest parseTransactionsRequest(Element root) {
-        ArrayList<Order> orders = new ArrayList<>();
-        ArrayList<Order> queries = new ArrayList<>();
-        ArrayList<Order> cancels = new ArrayList<>();
 
-        NodeList orderList = root.getElementsByTagName("order");
-        NodeList queryList = root.getElementsByTagName("query");
-        NodeList cancelList = root.getElementsByTagName("cancel");
+        ArrayList<TransactionsRequestItem> requestItems = new ArrayList<>();
+
+        NodeList nodeList = root.getChildNodes();
 
         int accountId = Integer.parseInt(root.getAttribute("id"));
 
-        for (int i = 0; i < orderList.getLength(); i++) {
-            Node node = orderList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element order = (Element) node;
-                String sym = order.getAttribute("sym");
-                int amount = Integer.parseInt(order.getAttribute("amount"));
-                double limit = Double.parseDouble(order.getAttribute("limit"));
-                orders.add(new Order(amount, limit, sym, accountId));
-            }
-        }
-
-        parseQueryAndCancel(queries, queryList);
-
-        parseQueryAndCancel(cancels, cancelList);
-
-        return new TransactionsRequest(orders, queries, cancels);
-    }
-
-    private void parseQueryAndCancel(ArrayList<Order> transactions, NodeList nodeList) {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element query = (Element) node;
-                int id = Integer.parseInt(query.getAttribute("id"));
-                transactions.add(new Order(id));
+                String name = node.getNodeName();
+                Element order = (Element) node;
+                switch (name) {
+                    case "order" -> {
+                        String sym = order.getAttribute("sym");
+                        int amount = Integer.parseInt(order.getAttribute("amount"));
+                        double limit = Double.parseDouble(order.getAttribute("limit"));
+                        Order toCreate = new Order(amount, limit, sym, accountId);
+                        requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.ORDER, toCreate));
+                    }
+                    case "query" -> {
+                        int id = Integer.parseInt(order.getAttribute("id"));
+                        requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.QUERY, id));
+                    }
+                    case "cancel" -> {
+                        int id = Integer.parseInt(order.getAttribute("id"));
+                        requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.CANCEL, id));
+                    }
+                }
             }
         }
+
+        return new TransactionsRequest(requestItems);
     }
 
     public void CreateXmlResponse(OutputStream os, ArrayList<Result> results) throws TransformerException {

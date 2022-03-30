@@ -33,6 +33,10 @@ public class Order {
         return account_id;
     }
 
+    public int getOrderId() {
+        return order_id;
+    }
+
     @Override
     public String toString() {
         return "(id: " + order_id + ", account_id: " + account_id + ", amount: " + amount + ", symbol: " + symbol + ", limit: " + price + ")";

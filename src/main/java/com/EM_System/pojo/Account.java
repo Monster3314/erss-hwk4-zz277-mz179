@@ -24,7 +24,7 @@ public class Account implements CreateRequestItem {
         return balance;
     }
 
-    public void addBalance(int amount) {
+    public void addBalance(double amount) {
         this.balance += amount;
     }
 

@@ -5,23 +5,32 @@ import com.EM_System.app.RequestExecutor;
 import java.util.ArrayList;
 
 public class TransactionsRequest implements Request{
-    private final ArrayList<Order> orders;
-    private final ArrayList<Order> queries;
-    private final ArrayList<Order> cancels;
+    private final ArrayList<TransactionsRequestItem> requestItems;
 
-    public TransactionsRequest(ArrayList<Order> orders, ArrayList<Order> queries, ArrayList<Order> cancels) {
-        this.orders = orders;
-        this.queries = queries;
-        this.cancels = cancels;
+    public TransactionsRequest(ArrayList<TransactionsRequestItem> requestItems) {
+        this.requestItems = requestItems;
     }
 
     @Override
     public String toString() {
-        return "orders: " + orders + "\npositions: " + queries + "\ncancels" + cancels;
+        return "requests: " + requestItems;
     }
 
     @Override
     public ArrayList<Result> exec(RequestExecutor executor) {
-        return new ArrayList<>();
+        ArrayList<Result> results = new ArrayList<>();
+        for (TransactionsRequestItem item : requestItems) {
+            short type = item.getType();
+            if (type == TransactionsRequestItem.ORDER) {
+                results.add(executor.executeOrder(item.getOrder()));
+            }
+            else if (type == TransactionsRequestItem.QUERY) {
+                results.add(executor.executeQuery(item.getOrderId()));
+            }
+            else if (type == TransactionsRequestItem.CANCEL) {
+                results.add(executor.executeCancel(item.getOrderId()));
+            }
+        }
+        return results;
     }
 }

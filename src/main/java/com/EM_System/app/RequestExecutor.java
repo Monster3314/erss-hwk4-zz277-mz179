@@ -1,20 +1,35 @@
 package com.EM_System.app;
 
 import com.EM_System.dao.AccountMapper;
+import com.EM_System.dao.OrderMapper;
 import com.EM_System.dao.PositionMapper;
-import com.EM_System.pojo.Account;
-import com.EM_System.pojo.Order;
-import com.EM_System.pojo.Position;
-import com.EM_System.pojo.Result;
+import com.EM_System.pojo.*;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class RequestExecutor {
 
-    private AccountMapper accountMapper;
-    private PositionMapper positionMapper;
+    private final AccountMapper accountMapper;
+    private final PositionMapper positionMapper;
+    private final OrderMapper orderMapper;
 
+    public RequestExecutor() throws IOException {
+        String resource = "mybatis-config.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        SqlSession sqlSession = sqlSessionFactory.openSession(true);
+        this.accountMapper = sqlSession.getMapper(AccountMapper.class);
+        this.positionMapper = sqlSession.getMapper(PositionMapper.class);
+        this.orderMapper = sqlSession.getMapper(OrderMapper.class);
+    }
 
     public Result executeCreate(Account account) {
         int numRow = accountMapper.addAcc(account);
@@ -62,15 +77,41 @@ public class RequestExecutor {
         }
     }
 
-//    public Result executeCancel(Order order) {
-//        int accountId = order.getAccountId();
-//        Account account = accountMapper.getAccByID(accountId);
-//
-//    }
-//
-//    public Result executeQuery(Order order) {
-//
-//    }
+    public Result executeCancel(int orderId) {
+        Order order = orderMapper.getOrderByID(orderId);
+        LinkedHashMap<String, String> attr = new LinkedHashMap<>();
+        attr.put("id", String.valueOf(orderId));
+        if (order == null) {
+            return new Result("error", attr, "Transaction does not exist or it is not open", new ArrayList<>());
+        }
+        int accountId = order.getAccountId();
+        Account account = accountMapper.getAccByID(accountId);
+        double refund;
+        return new Result("error", new LinkedHashMap<>(), "Transaction does not exist or it is not open", new ArrayList<>());
+    }
+
+    private boolean tryAddBalance(int accountId, double amount) {
+        while (true) {
+            Account account = accountMapper.getAccByID(accountId);
+            double balance = account.getBalance();
+            if (balance + amount < 0) {
+                return false;
+            }
+            account.addBalance(amount);
+            int numRow = accountMapper.updateAcc(account);
+            if (numRow == 1) {
+                return true;
+            }
+        }
+    }
+
+    public Result executeQuery(int orderId) {
+        return new Result("error", new LinkedHashMap<>(), "Transaction does not exist or it is not open", new ArrayList<>());
+    }
+
+    public Result executeOrder(Order order) {
+        return new Result("error", new LinkedHashMap<>(), "Transaction does not exist or it is not open", new ArrayList<>());
+    }
 
 
 }
