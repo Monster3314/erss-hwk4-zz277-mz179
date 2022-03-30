@@ -15,6 +15,22 @@ public class Position implements CreateRequestItem {
         this.symbol_name = symbol_name;
     }
 
+    public int getAccountId() {
+        return account_id;
+    }
+
+    public String getSymbol() {
+        return symbol_name;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void addAmount(int amount) {
+        this.amount += amount;
+    }
+
     @Override
     public String toString() {
         return "(account_id: " + account_id + ", amount: " + amount + ", symbol: " + symbol_name + ")";

@@ -122,10 +122,14 @@ public class XmlParser {
         }
     }
 
-    public void CreateXmlResponse(OutputStream os) throws TransformerException {
+    public void CreateXmlResponse(OutputStream os, ArrayList<Result> results) throws TransformerException {
         Document document = builder.newDocument();
         Element root = document.createElement("results");
         document.appendChild(root);
+
+        for (Result ret : results) {
+            root.appendChild(ret.getDomElement(document));
+        }
 
         DOMSource domSource = new DOMSource(document);
         StreamResult result = new StreamResult(os);

@@ -14,6 +14,18 @@ public class Account implements CreateRequestItem {
         this.balance = balance;
     }
 
+    public int getAccountId() {
+        return account_id;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void addBalance(int amount) {
+        this.balance += amount;
+    }
+
     @Override
     public String toString() {
         return "(account_id: " + account_id + ", balance: " + balance + ")";
