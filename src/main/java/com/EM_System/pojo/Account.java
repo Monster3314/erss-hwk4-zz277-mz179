@@ -1,5 +1,7 @@
 package com.EM_System.pojo;
 
+import com.EM_System.app.RequestExecutor;
+
 public class Account implements CreateRequestItem {
     private int account_id;
     private Double balance;
@@ -29,6 +31,11 @@ public class Account implements CreateRequestItem {
     @Override
     public String toString() {
         return "(account_id: " + account_id + ", balance: " + balance + ")";
+    }
+
+    @Override
+    public Result exec(RequestExecutor executor) {
+        return executor.executeCreate(this);
     }
 }
 
