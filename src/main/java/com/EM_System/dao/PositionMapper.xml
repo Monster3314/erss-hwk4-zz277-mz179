@@ -17,7 +17,7 @@
         values (#{symbol_name}, #{amount}, #{account_id});
     </insert>
 
-    <update id="updatePosition" parameterType="com.EM_System.pojo.Position">
+    <update id="editPosition" parameterType="com.EM_System.pojo.Position">
         update EM_System.position
         set amount = #{amount},
             version = version + 1

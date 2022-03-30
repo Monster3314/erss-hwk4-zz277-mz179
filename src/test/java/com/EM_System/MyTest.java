@@ -21,11 +21,19 @@ public class MyTest {
             SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
             SqlSession sqlSession = sqlSessionFactory.openSession(true);
             AccountMapper mapper = sqlSession.getMapper(AccountMapper.class);
-            List<Account> accounts = mapper.getAccList();
+            List<Account> accounts;
+            try{
+                accounts = mapper.getAccList();
+            }catch (Exception e){
+                sqlSession.rollback();
+                accounts = null;
+            }finally {
+                sqlSession.commit();
+                sqlSession.close();
+            }
             for (Account account : accounts) {
                 System.out.println(account.toString());
             }
-            sqlSession.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
