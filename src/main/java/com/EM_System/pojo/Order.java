@@ -37,6 +37,31 @@ public class Order {
         return order_id;
     }
 
+    public void cancelOrder() {
+        this.state = 1;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
     @Override
     public String toString() {
         return "(id: " + order_id + ", account_id: " + account_id + ", amount: " + amount + ", symbol: " + symbol + ", limit: " + price + ")";

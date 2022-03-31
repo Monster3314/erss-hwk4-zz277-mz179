@@ -21,7 +21,7 @@
         update EM_System.Position
         set amount = #{amount},
             version = version + 1
-        where account_id = #{order_id} and symbol_name = #{symbol_name} and version = #{version}
+        where account_id = #{account_id} and symbol_name = #{symbol_name} and version = #{version}
     </update>
 
     <resultMap id="MyFull" type="com.EM_System.pojo.Position">

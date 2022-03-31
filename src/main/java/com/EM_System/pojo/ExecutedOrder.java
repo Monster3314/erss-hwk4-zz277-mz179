@@ -22,4 +22,15 @@ public class ExecutedOrder {
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
+    public int getAmount() {
+        return amount;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
 }
