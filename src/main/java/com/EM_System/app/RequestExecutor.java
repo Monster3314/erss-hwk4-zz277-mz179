@@ -107,13 +107,13 @@ public class RequestExecutor {
         double price = order.getPrice();
         int accountId = order.getAccountId();
         int amount = order.getAmount();
-        // TODO: check price cannot be 0
-        if (price > 0) {
+        // TODO: check amount cannot be 0
+        if (amount > 0) {
             double refund = price * amount;
             tryAddBalance(accountId, refund);
         }
         else {
-            addPosition(new Position(accountId, amount, order.getSymbol()));
+            addPosition(new Position(accountId, -amount, order.getSymbol()));
         }
         return new Result("canceled", attr, null, queryOrder(orderId));
     }
@@ -182,14 +182,14 @@ public class RequestExecutor {
         attr.put("amount", String.valueOf(amount));
         attr.put("limit", String.valueOf(price));
         int accountId = order.getAccountId();
-        if (price > 0) {
+        if (amount > 0) {
             double pay = price * amount;
             if (!tryAddBalance(accountId, -pay)) {
                 return new Result("error", attr, "Insufficient balance", new ArrayList<>());
             }
         }
         else {
-            if (!tryDeductPosition(accountId, amount, symbol)) {
+            if (!tryDeductPosition(accountId, -amount, symbol)) {
                 return new Result("error", attr, "Insufficient position", new ArrayList<>());
             }
         }
@@ -220,6 +220,25 @@ public class RequestExecutor {
     }
 
     private void tryMatchOrder(int orderId) {
+        Order order = orderMapper.getOrderByID(orderId);
+        while (order.getAmount() > 0 && order.getState() == 0) {
+            double price = order.getPrice();
+            if (order.getAmount() > 0) {
+                Order matchOrder = orderMapper.getMatchingSellOrder(order);
+                if (matchOrder == null || matchOrder.getPrice() > price) {
+                    return;
+                }
+                int matchAmount = -matchOrder.getAmount();
+                int execAmount = Math.min(matchAmount, order.getAmount());
 
+            }
+            else {
+                Order matchOrder = orderMapper.getMatchingBuyOrder(order);
+                if (matchOrder == null || matchOrder.getPrice() < price) {
+                    return;
+                }
+            }
+            order = orderMapper.getOrderByID(orderId);
+        }
     }
 }

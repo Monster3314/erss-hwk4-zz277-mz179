@@ -42,6 +42,14 @@ public class Order {
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
+    public void execOrder(int amount) {
+        this.amount += amount;
+        if (amount == 0) {
+            //TODO: state should be 2 if available
+            this.state = 1;
+        }
+    }
+
     public int getAmount() {
         return amount;
     }
