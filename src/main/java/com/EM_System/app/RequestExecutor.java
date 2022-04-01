@@ -139,7 +139,7 @@ public class RequestExecutor {
         if (order == null) {
             return results;
         }
-        if (order.getAmount() > 0) {
+        if (order.getAmount() != 0) {
             LinkedHashMap<String, String> attr = new LinkedHashMap<>();
             attr.put("shares", String.valueOf(order.getAmount()));
             if (order.getState() == 0) {
@@ -221,21 +221,37 @@ public class RequestExecutor {
 
     private void tryMatchOrder(int orderId) {
         Order order = orderMapper.getOrderByID(orderId);
-        while (order.getAmount() > 0 && order.getState() == 0) {
+        while (order.getAmount() != 0 && order.getState() == 0) {
             double price = order.getPrice();
-            if (order.getAmount() > 0) {
+            int amount = order.getAmount();
+            if (amount > 0) {
                 Order matchOrder = orderMapper.getMatchingSellOrder(order);
                 if (matchOrder == null || matchOrder.getPrice() > price) {
                     return;
                 }
                 int matchAmount = -matchOrder.getAmount();
-                int execAmount = Math.min(matchAmount, order.getAmount());
-
+                int execAmount = Math.min(matchAmount, amount);
+                // TODO: deal with atomic, exec order begin
+                order.execOrder(-execAmount);
+                matchOrder.execOrder(execAmount);
+                if (orderMapper.editOrder(order) == 1 && orderMapper.editOrder(matchOrder) == 1) {
+                    tryAddBalance(matchOrder.getAccountId(), execAmount * (2 * price - matchOrder.getPrice()));
+                    addPosition(new Position(order.getAccountId(), execAmount, order.getSymbol()));
+                }
             }
             else {
                 Order matchOrder = orderMapper.getMatchingBuyOrder(order);
                 if (matchOrder == null || matchOrder.getPrice() < price) {
                     return;
+                }
+                int matchAmount = matchOrder.getAmount();
+                int execAmount = Math.min(matchAmount, -amount);
+                // TODO: same as above
+                order.execOrder(execAmount);
+                matchOrder.execOrder(-execAmount);
+                if (orderMapper.editOrder(order) == 1 && orderMapper.editOrder(matchOrder) == 1) {
+                    tryAddBalance(order.getAccountId(), execAmount * price);
+                    addPosition(new Position(matchOrder.getAccountId(), execAmount, matchOrder.getSymbol()));
                 }
             }
             order = orderMapper.getOrderByID(orderId);
