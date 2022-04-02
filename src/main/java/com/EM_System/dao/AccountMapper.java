@@ -8,9 +8,9 @@ public interface AccountMapper {
 
     List<Account> getAccList();
 
-    Account getAccByID(@Param("id") int id);
+    Account getAccByID(@Param("account_id") int account_id);
 
-    int deleteAcc(@Param("id") int id);
+    int deleteAcc(@Param("account_id") int account_id);
 
     int updateAcc(Account account);
 
