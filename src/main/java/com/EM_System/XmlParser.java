@@ -40,7 +40,7 @@ public class XmlParser {
         } else if (name.equals("transactions")) {
             return parseTransactionsRequest(root);
         } else {
-            // TODO: error msg
+            // TODO: no error massage, handle outside
             return null;
         }
     }
@@ -56,10 +56,15 @@ public class XmlParser {
                 String name = node.getNodeName();
                 if (name.equals("account")) {
                     Element account = (Element) node;
-                    // TODO: NumberFormatException
-                    int id = Integer.parseInt(account.getAttribute("id"));
-                    double balance = Double.parseDouble(account.getAttribute("balance"));
-                    requestItems.add(new Account(id, balance));
+                    try {
+                        int id = Integer.parseInt(account.getAttribute("id"));
+                        double balance = Double.parseDouble(account.getAttribute("balance"));
+                        requestItems.add(new Account(id, balance));
+                    }
+                    catch (NumberFormatException e) {
+                        // TODO: no error massage here
+                        // requestItems.add(null);
+                    }
                 } else if (name.equals("symbol")) {
                     Element symbol = (Element) node;
                     String symName = symbol.getAttribute("sym");
@@ -68,10 +73,15 @@ public class XmlParser {
                         Node symNode = symbols.item(j);
                         if (symNode.getNodeType() == Node.ELEMENT_NODE) {
                             Element sym = (Element) symNode;
-                            // TODO: NumberFormatException
-                            int id = Integer.parseInt(sym.getAttribute("id"));
-                            int num = Integer.parseInt(sym.getTextContent());
-                            requestItems.add(new Position(id, num, symName));
+                            try {
+                                int id = Integer.parseInt(sym.getAttribute("id"));
+                                int num = Integer.parseInt(sym.getTextContent());
+                                requestItems.add(new Position(id, num, symName));
+                            }
+                            catch (NumberFormatException e) {
+                                // TODO: no error massage here
+                                // requestItems.add(null);
+                            }
                         }
                     }
                 }
@@ -94,22 +104,29 @@ public class XmlParser {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 String name = node.getNodeName();
                 Element order = (Element) node;
-                switch (name) {
-                    case "order" -> {
-                        String sym = order.getAttribute("sym");
-                        int amount = Integer.parseInt(order.getAttribute("amount"));
-                        double limit = Double.parseDouble(order.getAttribute("limit"));
-                        Order toCreate = new Order(amount, limit, sym, accountId);
-                        requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.ORDER, toCreate));
+
+                try {
+                    switch (name) {
+                        case "order" -> {
+                            String sym = order.getAttribute("sym");
+                            int amount = Integer.parseInt(order.getAttribute("amount"));
+                            double limit = Double.parseDouble(order.getAttribute("limit"));
+                            Order toCreate = new Order(amount, limit, sym, accountId);
+                            requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.ORDER, toCreate));
+                        }
+                        case "query" -> {
+                            int id = Integer.parseInt(order.getAttribute("id"));
+                            requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.QUERY, id));
+                        }
+                        case "cancel" -> {
+                            int id = Integer.parseInt(order.getAttribute("id"));
+                            requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.CANCEL, id));
+                        }
                     }
-                    case "query" -> {
-                        int id = Integer.parseInt(order.getAttribute("id"));
-                        requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.QUERY, id));
-                    }
-                    case "cancel" -> {
-                        int id = Integer.parseInt(order.getAttribute("id"));
-                        requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.CANCEL, id));
-                    }
+                }
+                catch (NumberFormatException e) {
+                    // TODO: no error massage here
+                    // requestItems.add(null);
                 }
             }
         }
