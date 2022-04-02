@@ -11,7 +11,7 @@ CREATE TABLE EM_System.Account (
 
 DROP TABLE IF EXISTS EM_System.Position;
 CREATE TABLE EM_System.Position (
-    pos_id bigint NOT NULL PRIMARY KEY,
+    pos_id SERIAL NOT NULL PRIMARY KEY,
     symbol_name varchar(50) NOT NULL,
     amount bigint DEFAULT 0,
     account_id bigint NOT NULL,

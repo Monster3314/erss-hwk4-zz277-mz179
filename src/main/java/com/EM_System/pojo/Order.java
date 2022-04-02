@@ -6,9 +6,9 @@ public class Order {
     private int order_id;
     private int amount;
     private double price;
-    private String symbol;
+    private String symbol_name;
     private int account_id;
-    private int state;
+    private String state;
     private Timestamp timestamp;
     private int version;
 
@@ -21,10 +21,10 @@ public class Order {
         this.order_id = id;
     }
 
-    public Order(int amount, Double price, String symbol, int account_id) {
+    public Order(int amount, Double price, String symbol_name, int account_id) {
         this.amount = amount;
         this.price = price;
-        this.symbol = symbol;
+        this.symbol_name = symbol_name;
         this.account_id = account_id;
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
@@ -38,7 +38,7 @@ public class Order {
     }
 
     public void cancelOrder() {
-        this.state = 1;
+        this.state = "canceled";
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
@@ -46,7 +46,7 @@ public class Order {
         this.amount += amount;
         if (amount == 0) {
             //TODO: state should be 2 if available
-            this.state = 1;
+            this.state = "executed";
         }
     }
 
@@ -54,7 +54,7 @@ public class Order {
         return amount;
     }
 
-    public int getState() {
+    public String getState() {
         return state;
     }
 
@@ -62,8 +62,8 @@ public class Order {
         return price;
     }
 
-    public String getSymbol() {
-        return symbol;
+    public String getSymbol_Name() {
+        return symbol_name;
     }
 
     public Timestamp getTimestamp() {
@@ -72,6 +72,6 @@ public class Order {
 
     @Override
     public String toString() {
-        return "(id: " + order_id + ", account_id: " + account_id + ", amount: " + amount + ", symbol: " + symbol + ", limit: " + price + ")";
+        return "(id: " + order_id + ", account_id: " + account_id + ", amount: " + amount + ", symbol: " + symbol_name + ", limit: " + price + ")";
     }
 }

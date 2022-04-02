@@ -93,7 +93,7 @@ public class RequestExecutor {
             return new Result("error", attr, "Transaction does not exist", new ArrayList<>());
         }
         while (true) {
-            if (order.getAmount() == 0 || order.getState() == 1) {
+            if (order.getAmount() == 0 || !order.getState().equals("open")) {
                 return new Result("error", attr, "Transaction is not open", new ArrayList<>());
             }
             order.cancelOrder();
@@ -113,7 +113,7 @@ public class RequestExecutor {
             tryAddBalance(accountId, refund);
         }
         else {
-            addPosition(new Position(accountId, -amount, order.getSymbol()));
+            addPosition(new Position(accountId, -amount, order.getSymbol_Name()));
         }
         return new Result("canceled", attr, null, queryOrder(orderId));
     }
@@ -142,10 +142,10 @@ public class RequestExecutor {
         if (order.getAmount() != 0) {
             LinkedHashMap<String, String> attr = new LinkedHashMap<>();
             attr.put("shares", String.valueOf(order.getAmount()));
-            if (order.getState() == 0) {
+            if (order.getState().equals("open")) {
                 results.add(new Result("open", attr, null, new ArrayList<>()));
             }
-            else {
+            else if (order.getState().equals("canceled")) {
                 attr.put("time", String.valueOf(order.getTimestamp()));
                 results.add(new Result("canceled", attr, null, new ArrayList<>()));
             }
@@ -177,7 +177,7 @@ public class RequestExecutor {
         LinkedHashMap<String, String> attr = new LinkedHashMap<>();
         int amount = order.getAmount();
         double price = order.getPrice();
-        String symbol = order.getSymbol();
+        String symbol = order.getSymbol_Name();
         attr.put("sym", symbol);
         attr.put("amount", String.valueOf(amount));
         attr.put("limit", String.valueOf(price));
@@ -221,7 +221,7 @@ public class RequestExecutor {
 
     private void tryMatchOrder(int orderId) {
         Order order = orderMapper.getOrderByID(orderId);
-        while (order.getAmount() != 0 && order.getState() == 0) {
+        while (order.getAmount() != 0 && order.getState().equals("open")) {
             double price = order.getPrice();
             int amount = order.getAmount();
             if (amount > 0) {
@@ -236,7 +236,7 @@ public class RequestExecutor {
                 matchOrder.execOrder(execAmount);
                 if (orderMapper.editOrder(order) == 1 && orderMapper.editOrder(matchOrder) == 1) {
                     tryAddBalance(matchOrder.getAccountId(), execAmount * (2 * price - matchOrder.getPrice()));
-                    addPosition(new Position(order.getAccountId(), execAmount, order.getSymbol()));
+                    addPosition(new Position(order.getAccountId(), execAmount, order.getSymbol_Name()));
                 }
             }
             else {
@@ -251,7 +251,7 @@ public class RequestExecutor {
                 matchOrder.execOrder(-execAmount);
                 if (orderMapper.editOrder(order) == 1 && orderMapper.editOrder(matchOrder) == 1) {
                     tryAddBalance(order.getAccountId(), execAmount * price);
-                    addPosition(new Position(matchOrder.getAccountId(), execAmount, matchOrder.getSymbol()));
+                    addPosition(new Position(matchOrder.getAccountId(), execAmount, matchOrder.getSymbol_Name()));
                 }
             }
             order = orderMapper.getOrderByID(orderId);

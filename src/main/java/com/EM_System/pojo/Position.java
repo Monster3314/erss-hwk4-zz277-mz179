@@ -6,7 +6,7 @@ public class Position implements CreateRequestItem {
     private int account_id;
     private int amount;
     private String symbol_name;
-
+    private int version;
     public Position() {
 
     }
@@ -27,6 +27,10 @@ public class Position implements CreateRequestItem {
 
     public int getAmount() {
         return amount;
+    }
+    
+    public int getVersion() {
+        return version;
     }
 
     public void addAmount(int amount) {

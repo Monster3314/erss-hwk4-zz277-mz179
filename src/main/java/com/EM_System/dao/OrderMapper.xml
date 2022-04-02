@@ -24,10 +24,10 @@
         where order_id = #{order_id};
     </select>
 
-    <insert id="createOrder" parameterType="com.EM_System.pojo.Order">
+    <insert id="createOrder" parameterType="com.EM_System.pojo.Order" useGeneratedKeys="true" keyProperty="order_id">
         insert into EM_System.Order
-            (amount, price, symbol, account_id, state, time, version)
-        values (#{amount}, #{price}, #{symbol}, #{account_id}, 'open', #{timestamp}, 1);
+            (amount, price, symbol_name, account_id, state, time, version)
+        values (#{amount}, #{price}, #{symbol_name}, #{account_id}, 'open', #{timestamp}, 1);
     </insert>
 
     <update id="updateOrder" parameterType="com.EM_System.pojo.Order">
