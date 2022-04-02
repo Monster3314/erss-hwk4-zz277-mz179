@@ -8,14 +8,14 @@
         <![CDATA[select *
                  from EM_System.Order
                  where state = 'open' and symbol_name = #{symbol_name} and amount < 0
-                 order by price limit 1 asc;]]>
+                 order by price asc limit 1;]]>
     </select>
 
     <select id="getMatchingBuyOrder" resultType="com.EM_System.pojo.Order" parameterType="com.EM_System.pojo.Order" resultMap="MyFull">
         <![CDATA[select *
                  from EM_System.Order
                  where state = 'open' and symbol_name = #{symbol_name} and amount > 0
-                 order by price limit 1 desc;]]>
+                 order by price desc limit 1;]]>
     </select>
 
     <select id="getOrderByID" resultType="com.EM_System.pojo.Order" parameterType="int" resultMap="MyFull">
@@ -30,7 +30,7 @@
         values (#{amount}, #{price}, #{symbol_name}, #{account_id}, 'open', #{timestamp}, 1);
     </insert>
 
-    <update id="updateOrder" parameterType="com.EM_System.pojo.Order">
+    <update id="editOrder" parameterType="com.EM_System.pojo.Order">
         update EM_System.Order
         set amount = #{amount},
             state = #{state},

@@ -237,6 +237,7 @@ public class RequestExecutor {
                 if (orderMapper.editOrder(order) == 1 && orderMapper.editOrder(matchOrder) == 1) {
                     tryAddBalance(matchOrder.getAccountId(), execAmount * (2 * price - matchOrder.getPrice()));
                     addPosition(new Position(order.getAccountId(), execAmount, order.getSymbol_Name()));
+                    executedOrderMapper.createExecutedOrder(new ExecutedOrder(execAmount, price, orderId, matchOrder.getOrderId()));
                 }
             }
             else {
@@ -252,6 +253,7 @@ public class RequestExecutor {
                 if (orderMapper.editOrder(order) == 1 && orderMapper.editOrder(matchOrder) == 1) {
                     tryAddBalance(order.getAccountId(), execAmount * price);
                     addPosition(new Position(matchOrder.getAccountId(), execAmount, matchOrder.getSymbol_Name()));
+                    executedOrderMapper.createExecutedOrder(new ExecutedOrder(execAmount, price, matchOrder.getOrderId(), orderId));
                 }
             }
             order = orderMapper.getOrderByID(orderId);
