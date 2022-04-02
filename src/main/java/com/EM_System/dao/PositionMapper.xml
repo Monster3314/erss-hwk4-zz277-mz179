@@ -13,8 +13,8 @@
 
     <insert id="createPosition" parameterType="com.EM_System.pojo.Position">
         insert into EM_System.Position
-            (symbol_name, amount, account_id, 1)
-        values (#{symbol_name}, #{amount}, #{account_id});
+            (symbol_name, amount, account_id, version)
+        values (#{symbol_name}, #{amount}, #{account_id}, 1);
     </insert>
 
     <update id="editPosition" parameterType="com.EM_System.pojo.Position">
