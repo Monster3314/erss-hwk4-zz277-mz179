@@ -63,7 +63,7 @@ public class NIOClient
                           public void run() {
                             try{
                               for(int i=0;i<200;i++){
-                                client.sendAndRecv(client.getStringFromDocument(client.createAccount(i, 100000000)));
+                                client.sendAndRecv(client.getStringFromDocument(client.createAccount(i, 10000)));
                                 client.sendAndRecv(client.getStringFromDocument(client.addPosition(i, "sym", rand.nextInt(1000))));
                                 client.sendAndRecv(client.getStringFromDocument(client.createOrder(5, i, rand.nextInt(100), 10.0 * rand.nextDouble())));
                               }
