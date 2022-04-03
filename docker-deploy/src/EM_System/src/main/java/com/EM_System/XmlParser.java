@@ -31,16 +31,20 @@ public class XmlParser {
         this.transformer = transformerFactory.newTransformer();
     }
 
-    public Request parse(InputStream inputStream) throws IOException, SAXException {
-        Document document = builder.parse(inputStream);
-        Element root = document.getDocumentElement();
-        String name = root.getNodeName();
-        if (name.equals("create")) {
-            return parseCreateRequest(root);
-        } else if (name.equals("transactions")) {
-            return parseTransactionsRequest(root);
-        } else {
-            // TODO: no error massage, handle outside
+    public Request parse(InputStream inputStream) {
+        try {
+            Document document = builder.parse(inputStream);
+            Element root = document.getDocumentElement();
+            String name = root.getNodeName();
+            if (name.equals("create")) {
+                return parseCreateRequest(root);
+            } else if (name.equals("transactions")) {
+                return parseTransactionsRequest(root);
+            } else {
+                // TODO: no error massage, handle outside
+                return null;
+            }
+        } catch (IOException | SAXException e) {
             return null;
         }
     }

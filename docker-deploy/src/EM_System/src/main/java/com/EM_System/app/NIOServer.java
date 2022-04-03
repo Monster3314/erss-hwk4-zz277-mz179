@@ -114,6 +114,10 @@ public class NIOServer {
                                     // ############# 业务处理 结束 ############
                                     XmlParser parser = new XmlParser();
                                     Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
+                                    if (req == null) {
+                                        System.out.println("Malformed request");
+                                        return;
+                                    }
                                     ArrayList<Result> res;
                                     RequestExecutor executor = new RequestExecutor();
                                     res = req.exec(executor);
@@ -128,13 +132,7 @@ public class NIOServer {
                                     baos.close();
                                     key.attach(resp);
                                     key.interestOps(SelectionKey.OP_WRITE);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (SAXException e) {
-                                    e.printStackTrace();
-                                } catch (TransformerException e) {
-                                    e.printStackTrace();
-                                } catch (ParserConfigurationException e) {
+                                } catch (IOException | TransformerException | ParserConfigurationException e) {
                                     e.printStackTrace();
                                 }
                             }
