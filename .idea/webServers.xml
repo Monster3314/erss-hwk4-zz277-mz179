@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="409509a2-e248-4898-ae8c-153a1f638cc6" name="568hw4">
+        <fileTransfer accessType="SFTP" host="vcm-26268.vm.duke.edu" port="22" sshConfigId="3d8b3931-3c03-479b-bce0-12c090e98834" sshConfig="zz277@vcm-26268.vm.duke.edu:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

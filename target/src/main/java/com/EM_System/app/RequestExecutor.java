@@ -104,6 +104,7 @@ public class RequestExecutor {
         if (order == null) {
             return new Result("error", attr, "Transaction does not exist", new ArrayList<>());
         }
+<<<<<<< HEAD:docker-deploy/src/EM_System/src/main/java/com/EM_System/app/RequestExecutor.java
         try{
           while (true) {
               if (order.getAmount() == 0 || !order.getState().equals("open")) {
@@ -133,6 +134,30 @@ public class RequestExecutor {
           sqlSession.commit();
         }catch(Exception e){
           sqlSession.rollback();
+=======
+        while (true) {
+            if (order.getAmount() == 0 || !order.getState().equals("open")) {
+                return new Result("error", attr, "Transaction is not open", new ArrayList<>());
+            }
+            order.cancelOrder();
+            if  (orderMapper.editOrder(order) == 1) {
+                break;
+            }
+            else {
+                order = orderMapper.getOrderByID(orderId);
+            }
+        }
+        double price = order.getPrice();
+        int accountId = order.getAccountId();
+        int amount = order.getAmount();
+        // TODO: check amount cannot be 0
+        if (amount > 0) {
+            double refund = price * amount;
+            tryAddBalance(accountId, refund);
+        }
+        else {
+            addPosition(new Position(accountId, -amount, order.getSymbol_Name()));
+>>>>>>> e56022e648fb5bb92ee22fbeb83e31c24ba16e22:src/main/java/com/EM_System/app/RequestExecutor.java
         }
         return new Result("canceled", attr, null, queryOrder(orderId));
     }
@@ -165,7 +190,11 @@ public class RequestExecutor {
                 results.add(new Result("open", attr, null, new ArrayList<>()));
             }
             else if (order.getState().equals("canceled")) {
+<<<<<<< HEAD:docker-deploy/src/EM_System/src/main/java/com/EM_System/app/RequestExecutor.java
                 attr.put("time", String.valueOf(order.getTimestamp().getTime() / 1000));
+=======
+                attr.put("time", String.valueOf(order.getTimestamp()));
+>>>>>>> e56022e648fb5bb92ee22fbeb83e31c24ba16e22:src/main/java/com/EM_System/app/RequestExecutor.java
                 results.add(new Result("canceled", attr, null, new ArrayList<>()));
             }
         }
@@ -259,6 +288,7 @@ public class RequestExecutor {
                 // TODO: deal with atomic, exec order begin
                 order.execOrder(-execAmount);
                 matchOrder.execOrder(execAmount);
+<<<<<<< HEAD:docker-deploy/src/EM_System/src/main/java/com/EM_System/app/RequestExecutor.java
                 ArrayList<Order> matchedOrders = new ArrayList<>();
                 matchedOrders.add(order);
                 matchedOrders.add(matchOrder);
@@ -267,6 +297,12 @@ public class RequestExecutor {
                     tryAddBalance(order.getAccountId(), execAmount * (price - matchPrice));
                     addPosition(new Position(order.getAccountId(), execAmount, order.getSymbol_Name()));
                     executedOrderMapper.createExecutedOrder(new ExecutedOrder(execAmount, matchPrice, orderId, matchOrder.getOrderId()));
+=======
+                if (orderMapper.editOrder(order) == 1 && orderMapper.editOrder(matchOrder) == 1) {
+                    tryAddBalance(matchOrder.getAccountId(), execAmount * (2 * price - matchOrder.getPrice()));
+                    addPosition(new Position(order.getAccountId(), execAmount, order.getSymbol_Name()));
+                    executedOrderMapper.createExecutedOrder(new ExecutedOrder(execAmount, price, orderId, matchOrder.getOrderId()));
+>>>>>>> e56022e648fb5bb92ee22fbeb83e31c24ba16e22:src/main/java/com/EM_System/app/RequestExecutor.java
                 }
             }
             else {
@@ -280,6 +316,7 @@ public class RequestExecutor {
                 // TODO: same as above
                 order.execOrder(execAmount);
                 matchOrder.execOrder(-execAmount);
+<<<<<<< HEAD:docker-deploy/src/EM_System/src/main/java/com/EM_System/app/RequestExecutor.java
                 ArrayList<Order> matchedOrders = new ArrayList<>();
                 matchedOrders.add(order);
                 matchedOrders.add(matchOrder);
@@ -287,6 +324,12 @@ public class RequestExecutor {
                     tryAddBalance(order.getAccountId(), execAmount * matchPrice);
                     addPosition(new Position(matchOrder.getAccountId(), execAmount, matchOrder.getSymbol_Name()));
                     executedOrderMapper.createExecutedOrder(new ExecutedOrder(execAmount, matchPrice, matchOrder.getOrderId(), orderId));
+=======
+                if (orderMapper.editOrder(order) == 1 && orderMapper.editOrder(matchOrder) == 1) {
+                    tryAddBalance(order.getAccountId(), execAmount * price);
+                    addPosition(new Position(matchOrder.getAccountId(), execAmount, matchOrder.getSymbol_Name()));
+                    executedOrderMapper.createExecutedOrder(new ExecutedOrder(execAmount, price, matchOrder.getOrderId(), orderId));
+>>>>>>> e56022e648fb5bb92ee22fbeb83e31c24ba16e22:src/main/java/com/EM_System/app/RequestExecutor.java
                 }
             }
             order = orderMapper.getOrderByID(orderId);

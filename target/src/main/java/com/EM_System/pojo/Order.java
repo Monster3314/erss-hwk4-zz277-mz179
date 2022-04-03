@@ -44,7 +44,12 @@ public class Order {
 
     public void execOrder(int amount) {
         this.amount += amount;
+<<<<<<< HEAD:docker-deploy/src/EM_System/src/main/java/com/EM_System/pojo/Order.java
         if (this.amount == 0) {
+=======
+        if (amount == 0) {
+            //TODO: state should be 2 if available
+>>>>>>> e56022e648fb5bb92ee22fbeb83e31c24ba16e22:src/main/java/com/EM_System/pojo/Order.java
             this.state = "executed";
         }
     }
