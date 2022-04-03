@@ -55,7 +55,7 @@ public class NIOServer {
         serverChannel.configureBlocking(false);
 
         // 4. Create selector
-        Selector selector = Selector.open(false);
+        Selector selector = Selector.open();
 
         /**
          * SelectionKey.OP_ACCEPT get datagram </br>
