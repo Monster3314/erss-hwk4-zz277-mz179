@@ -16,7 +16,7 @@ import java.io.StringWriter;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-
+import java.util.*;
 
 public class NIOClient
 {
@@ -24,6 +24,8 @@ public class NIOClient
     TransformerFactory tf = TransformerFactory.newInstance();
     Transformer transformer = tf.newTransformer();
     DocumentBuilder builder;
+    public static final ThreadPoolExecutor executor
+            = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 
     public NIOClient() throws TransformerConfigurationException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -54,11 +56,18 @@ public class NIOClient
     public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
         NIOClient client = new NIOClient();
         client.initClient("152.3.77.189", 12345);
-
-        client.sendAndRecv(client.getStringFromDocument(client.createAccount(1, 100000000)));
-        client.sendAndRecv(client.getStringFromDocument(client.createAccount(2, 0)));
-        client.sendAndRecv(client.getStringFromDocument(client.addPosition(2, "sym", 100000000)));
-        client.sendAndRecv(client.getStringFromDocument(client.createOrder(10, 123, 10)));
+        Random rand = new Random();
+        for(int i=0;i<200;i++){
+          executor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                              client.sendAndRecv(client.getStringFromDocument(client.createAccount(i, 100000000)));
+                              client.sendAndRecv(client.getStringFromDocument(client.addPosition(i, "sym", rand.nextDouble(1000)));
+                              client.sendAndRecv(client.getStringFromDocument(client.createOrder(5, i, rand.nextDouble(100), rand.nextDouble(10)));
+                            }
+                        }
+          );
+        }
     }
 
     public DOMSource createAccount(int id, double balance) {
@@ -104,7 +113,7 @@ public class NIOClient
         return new DOMSource(document);
     }
 
-    public DOMSource createOrder(int num, int accountId, int amount) {
+    public DOMSource createOrder(int num, int accountId, int amount, int price) {
         Document document = builder.newDocument();
         Element root = document.createElement("transactions");
         document.appendChild(root);
@@ -114,7 +123,7 @@ public class NIOClient
         root.setAttributeNode(attr);
 
         for (int i = 0; i < num; i++) {
-            root.appendChild(createOrderElement(document, "sym", amount, 10));
+            root.appendChild(createOrderElement(document, "sym", amount, price));
         }
 
         return new DOMSource(document);

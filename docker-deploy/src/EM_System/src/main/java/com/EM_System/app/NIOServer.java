@@ -105,9 +105,8 @@ public class NIOServer {
                                             baos.write(buffer.get());
                                         }
                                     }
-
+                                    System.out.println(baos.toByteArray());
                                     // ############# 业务处理开始 ############
-                                    // 英文字符串转大写
                                     String recv = new String(baos.toByteArray()).toLowerCase();
 
                                     System.out.println(recv);
@@ -122,7 +121,7 @@ public class NIOServer {
                                     parser.CreateXmlResponse(baos, res);
                                     StringBuffer sb = new StringBuffer();
                                     String ans = new String(baos.toByteArray());
-                                    sb.append(ans.length() + "\n");
+                                    sb.append(ans.length() + System.lineSeparator());
                                     sb.append(ans);
                                     String resp = sb.toString();
                                     System.out.println(resp);
