@@ -33,9 +33,6 @@
 <<<<<<< HEAD:docker-deploy/src/EM_System/src/main/java/com/EM_System/dao/OrderMapper.xml
     <update id="editOrder" parameterType="java.util.List">
         <foreach collection="list" item="item" index="index" separator=";">
-=======
-    <update id="editOrder" parameterType="com.EM_System.pojo.Order">
->>>>>>> e56022e648fb5bb92ee22fbeb83e31c24ba16e22:src/main/java/com/EM_System/dao/OrderMapper.xml
         update EM_System.Order
         <set>
             amount = ${item.amount},
