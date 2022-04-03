@@ -48,8 +48,10 @@ public class NIOClient
         System.out.println("Client sending: " + words);
         channel.write(buffer);
         buffer.clear();
+        char[] ans = new char[1000];
+        ByteBuffer buffer = ByteBuffer.wrap(ans);
         channel.read(buffer);
-        System.out.println("Client received: " + new String(buffer.array()).trim());
+        System.out.println("Client received: " + new String(buffer.array()));
 
         channel.close();
     }
@@ -68,7 +70,7 @@ public class NIOClient
                                 client.sendAndRecv(client.getStringFromDocument(client.createOrder(5, i, rand.nextInt(100), 10.0 * rand.nextDouble())));
                               }
                             } catch(Exception e){
-                              System.out.println("Error occured!");
+                              System.out.println(e.getMessage());
                             }
                           }
                       }

@@ -142,6 +142,7 @@ public class NIOServer {
                         SocketChannel channel = (SocketChannel) key.channel();
                         String resp = (String) key.attachment();
                         channel.write(ByteBuffer.wrap(resp.getBytes()));
+                        channel.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
