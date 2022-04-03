@@ -30,7 +30,6 @@
         values (#{amount}, #{price}, #{symbol_name}, #{account_id}, 'open', #{timestamp}, 1);
     </insert>
 
-<<<<<<< HEAD:docker-deploy/src/EM_System/src/main/java/com/EM_System/dao/OrderMapper.xml
     <update id="editOrder" parameterType="java.util.List">
         <foreach collection="list" item="item" index="index" separator=";">
         update EM_System.Order
