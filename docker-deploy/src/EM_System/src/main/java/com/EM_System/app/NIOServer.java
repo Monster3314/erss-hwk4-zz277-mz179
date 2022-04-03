@@ -105,10 +105,9 @@ public class NIOServer {
                                             baos.write(buffer.get());
                                         }
                                     }
-                                    System.out.println(baos.toByteArray());
                                     // ############# 业务处理开始 ############
                                     String recv = new String(baos.toByteArray()).toLowerCase();
-                                    recv = recv.substring(recv.indexOf(System.lineSeparator() + 1));
+                                    recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
                                     System.out.println(recv);
                                     baos.flush();
                                     baos.reset();
