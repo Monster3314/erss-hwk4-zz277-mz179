@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.EM_System.dao.AccountMapper">
+    <select id="getAccList" resultType="com.EM_System.pojo.Account" resultMap="MyFull">
+        select * from EM_System.Account;
+    </select>
+    <select id="getAccByID" resultType="com.EM_System.pojo.Account" parameterType="int" resultMap="MyFull">
+        select *
+        from EM_System.Account
+        where account_id = #{account_id};
+    </select>
+
+    <delete id="deleteAcc" parameterType="int">
+        delete
+        from EM_System.Account
+        where account_id = #{account_id} and version = #{version};
+    </delete>
+
+    <update id="updateAcc" parameterType="com.EM_System.pojo.Account">
+        update EM_System.Account
+        set balance = #{balance},
+            version = version + 1
+        where account_id = #{account_id} and version = #{version};
+    </update>
+
+    <insert id="addAcc" parameterType="com.EM_System.pojo.Account">
+        insert into EM_System.Account
+            (account_id, balance, version)
+        values (#{account_id}, #{balance}, #{version});
+    </insert>
+
+    <resultMap id="MyFull" type="com.EM_System.pojo.Account">
+        <id property="account_id" column="account_id"></id>
+        <result property="balance" column="balance"></result>
+        <result property="version" column="version"></result>
+    </resultMap>
+
+</mapper>
+
+
