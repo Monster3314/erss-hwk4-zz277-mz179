@@ -16,7 +16,8 @@ import java.io.StringWriter;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.*;
+import java.util.concurrent.*;
+import java.util.Random;
 
 public class NIOClient
 {
@@ -41,7 +42,7 @@ public class NIOClient
 
     public void sendAndRecv(String words) throws IOException
     {
-        words = words.length() + '\n' + words;
+        words = words.length() + System.lineSeparator() + words;
         byte[] msg = words.getBytes();
         ByteBuffer buffer = ByteBuffer.wrap(msg);
         System.out.println("Client sending: " + words);
@@ -53,21 +54,25 @@ public class NIOClient
         channel.close();
     }
 
-    public static void main(String[] args) throws IOException, TransformerException, ParserConfigurationException {
+    public static void main(String[] args) throws IOException, ParserConfigurationException, TransformerException {
         NIOClient client = new NIOClient();
         client.initClient("152.3.77.189", 12345);
         Random rand = new Random();
-        for(int i=0;i<200;i++){
-          executor.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                              client.sendAndRecv(client.getStringFromDocument(client.createAccount(i, 100000000)));
-                              client.sendAndRecv(client.getStringFromDocument(client.addPosition(i, "sym", rand.nextDouble(1000)));
-                              client.sendAndRecv(client.getStringFromDocument(client.createOrder(5, i, rand.nextDouble(100), rand.nextDouble(10)));
+        executor.execute(new Runnable() {
+                          @Override
+                          public void run() {
+                            try{
+                              for(int i=0;i<200;i++){
+                                client.sendAndRecv(client.getStringFromDocument(client.createAccount(i, 100000000)));
+                                client.sendAndRecv(client.getStringFromDocument(client.addPosition(i, "sym", rand.nextInt(1000))));
+                                client.sendAndRecv(client.getStringFromDocument(client.createOrder(5, i, rand.nextInt(100), 10.0 * rand.nextDouble())));
+                              }
+                            } catch(Exception e){
+                              System.out.println("Error occured!");
                             }
-                        }
-          );
-        }
+                          }
+                      }
+        );
     }
 
     public DOMSource createAccount(int id, double balance) {
@@ -113,7 +118,7 @@ public class NIOClient
         return new DOMSource(document);
     }
 
-    public DOMSource createOrder(int num, int accountId, int amount, int price) {
+    public DOMSource createOrder(int num, int accountId, int amount, double price) {
         Document document = builder.newDocument();
         Element root = document.createElement("transactions");
         document.appendChild(root);
