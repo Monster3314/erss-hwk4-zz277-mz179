@@ -118,7 +118,7 @@ public class NIOServer {
                                     if (req == null) {
                                         System.out.println("Malformed request");
                                         key.cancel();
-                                        bao.close();
+                                        baos.close();
                                         return;
                                     }
                                     ArrayList<Result> res;
