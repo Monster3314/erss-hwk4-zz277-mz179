@@ -32,7 +32,7 @@ public class NIOServer {
 
     public static final ExecutorService executor = Executors.newCachedThreadPool();
     //public static final ThreadPoolExecutor executor
-            = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+//            = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     final InetAddress addr;
     final String SERVER_IP;
     public static final int SERVER_PORT = 12345;
@@ -116,7 +116,7 @@ public class NIOServer {
                                     XmlParser parser = new XmlParser();
                                     Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
                                     if (req == null) {
-                                        System.out.println("Malformed request")；
+                                        System.out.println("Malformed request");
                                         key.cancel();
                                         baos.close();
                                         return;
