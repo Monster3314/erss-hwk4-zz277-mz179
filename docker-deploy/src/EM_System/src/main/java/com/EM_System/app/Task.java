@@ -18,10 +18,6 @@ public class Task implements Runnable {
     public Task(Socket socket) {
         this.socket = socket;
     }
-    
-    public static int byteArrayToInt(byte[] b){
-    	return b[3]&0xFF | (b[2]&0xFF) << 8 | (b[1]&0xFF) << 16 | (b[0]&0xFF) << 24;
-    }
 
     public void run() {
         InputStream inputStream= null;
@@ -30,13 +26,8 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        byte[] datalen = new byte[4];
-        try {
-            inputStream.read(datalen);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int length = byteArrayToInt(datalen);
+        BufferedReader br = new BufferedReader(inputStream);
+        int length = Integer.parseInt(br.readline());
         byte[] data = new byte[length];
         try {
             inputStream.read(data);
