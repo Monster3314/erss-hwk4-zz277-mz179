@@ -9,6 +9,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.*;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class Task implements Runnable {
@@ -27,11 +28,14 @@ public class Task implements Runnable {
         }
         ByteBuffer buffer = ByteBuffer.allocate(65535);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        BufferedReader bufferedReader=new BufferedReader(inputStreamReader);
         int len = 0;
         while (true) {
             buffer.clear();
-            len = inputeStream.read(buffer);
+            try {
+                len = inputStream.read(buffer.array());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             if (len < 1)
                 break;
             buffer.flip();
@@ -60,13 +64,18 @@ public class Task implements Runnable {
             e.printStackTrace();
         }
         res = req.exec(executor);
-        baos.flush();
+        try {
+            baos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         baos.reset();
         try {
             parser.CreateXmlResponse(baos, res);
         } catch (TransformerException e) {
             e.printStackTrace();
         }
+        StringBuilder sb = new StringBuilder();
         sb.delete(0, sb.length());
         String ans = new String(baos.toByteArray());
         System.out.println(ans.length());
@@ -94,7 +103,6 @@ public class Task implements Runnable {
             baos.close();
             printWriter.close();
             outputStream.close();
-            bufferedReader.close();
             inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
