@@ -26,8 +26,14 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        BufferedReader br = new BufferedReader(inputStream);
-        int length = Integer.parseInt(br.readline());
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        int length = 0;
+        try {
+            length = Integer.parseInt(br.readLine());
+            System.out.println(length);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         byte[] data = new byte[length];
         try {
             inputStream.read(data);
