@@ -1,6 +1,6 @@
 package com.EM_System.app;
 
-import java.io.ByteArrayInputStream;
+/*import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -60,7 +60,7 @@ public class NIOServer {
 
         /**
          * SelectionKey.OP_ACCEPT get datagram </br>
-         */
+         *//*
         serverChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
@@ -170,5 +170,123 @@ public class NIOServer {
             e.printStackTrace();
         }
     }
+}*/
+
+ 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+ 
+public class ChatServer {
+ 
+	/**
+	 * @param args
+	 * @throws IOException 
+	 */
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		final Selector selector = Selector.open();;
+		
+		ServerSocketChannel ssc = ServerSocketChannel.open();
+		
+		try{
+			// Bind the server socket to the local host and port 
+			ssc.socket().bind(new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), 12345));
+			
+			//start a thread to handle the wirte and read
+			startWRThread(selector);
+			//block the main thread to accept client
+			while(true){  // will block the thread
+				
+				SocketChannel sc = ssc.accept();
+				//Get the server socket and set to non blocking mode  
+				sc.configureBlocking(false);
+				sc.register(selector, SelectionKey.OP_READ);
+			}
+		}finally{
+			selector.close();
+			ssc.close();
+		}
+	}
+ 
+	private static void startWRThread(final Selector selector) {
+		// TODO Auto-generated method stub
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub			
+				try {
+					while(true){
+						while(selector.selectNow() > 0){
+							
+							Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+						 // Walk through the ready keys collection and process date requests.
+							while(it.hasNext()){
+								SelectionKey readyKey = it.next();
+								if(readyKey.isReadable()){
+									SocketChannel channel = (SocketChannel) readyKey.channel();
+                  ByteBuffer buffer = ByteBuffer.allocate(65535);
+                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                  int len = 0;
+                  while (true) {
+                      buffer.clear();
+                      len = channel.read(buffer);
+                      if (len < 1)
+                          break;
+                      buffer.flip();
+                      while (buffer.hasRemaining()) {
+                          baos.write(buffer.get());
+                      }
+                  }
+									 // ############# 业务处理开始 ############
+                  String recv = new String(baos.toByteArray()).toLowerCase();
+                  recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
+                  System.out.println(recv);
+                  baos.flush();
+                  baos.reset();
+                  // ############# 业务处理 结束 ############
+                  XmlParser parser = new XmlParser();
+                  Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
+                  if (req == null) {
+                      System.out.println("Malformed request");
+                      key.interestOps(0);
+                      key.cancel();
+                      key.channel().close();
+                      baos.close();
+                      return;
+                  }
+                  ArrayList<Result> res;
+                  RequestExecutor executor = new RequestExecutor();
+                  res = req.exec(executor);
+                  parser.CreateXmlResponse(baos, res);
+                  StringBuffer sb = new StringBuffer();
+                  String ans = new String(baos.toByteArray());
+                  sb.append(ans.length() + System.lineSeparator());
+                  sb.append(ans);
+                  String resp = sb.toString();
+                  System.out.println(resp);
+                  // 业务处理结果返回将数据添加到key中
+                  baos.close();
+                  channel.write(ByteBuffer.wrap(resp.getBytes()));
+                  channel.shutdownOutput();
+								   it.remove(); 
+								}
+ 
+								//execute((ServerSocketChannel) readyKey.channel());
+							}
+						}
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+ 
 }
 

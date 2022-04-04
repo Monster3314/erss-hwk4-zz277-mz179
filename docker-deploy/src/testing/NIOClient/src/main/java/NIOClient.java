@@ -25,8 +25,9 @@ public class NIOClient
     TransformerFactory tf = TransformerFactory.newInstance();
     Transformer transformer = tf.newTransformer();
     DocumentBuilder builder;
-    public static final ThreadPoolExecutor executor
-            = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+    public static final ExecutorService executor = Executors.newCachedThreadPool();
+    //public static final ThreadPoolExecutor executor
+    //        = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 
     public NIOClient() throws TransformerConfigurationException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -60,21 +61,23 @@ public class NIOClient
         NIOClient client = new NIOClient();
         client.initClient("152.3.77.189", 12345);
         Random rand = new Random();
-        executor.execute(new Runnable() {
-                          @Override
-                          public void run() {
-                            try{
-                              for(int i=0;i<200;i++){
-                                client.sendAndRecv(client.getStringFromDocument(client.createAccount(i, 10000)));
-                                client.sendAndRecv(client.getStringFromDocument(client.addPosition(i, "sym", rand.nextInt(1000))));
-                                client.sendAndRecv(client.getStringFromDocument(client.createOrder(5, i, rand.nextInt(100), 10.0 * rand.nextDouble())));
+        for(int i=0;i<100;i++){
+          executor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                              try{
+                                  int tempAccount = rand.nextInt(1000);
+                                  client.sendAndRecv(client.getStringFromDocument(client.createAccount(tempAccount, 10000)));
+                                  client.sendAndRecv(client.getStringFromDocument(client.addPosition(tempAccount, "sym", rand.nextInt(100))));
+                                  client.sendAndRecv(client.getStringFromDocument(client.createOrder(5, tempAccount, rand.nextInt(100), 10.0 * rand.nextDouble())));
+                                  client.sendAndRecv(client.getStringFromDocument(client.createQuery(rand.nextInt(100), tempAccount));
+                              } catch(Exception e){
+                                System.out.println(e.getClass());
                               }
-                            } catch(Exception e){
-                              System.out.println(e.getMessage());
                             }
-                          }
-                      }
-        );
+                        }
+          );
+        }
     }
 
     public DOMSource createAccount(int id, double balance) {
