@@ -97,12 +97,15 @@ public class RequestExecutor {
     }
 
     // TODO: Authentication (orderId, accountId)
-    public Result executeCancel(int orderId) {
+    public Result executeCancel(int orderId, int inputAccountId) {
         LinkedHashMap<String, String> attr = new LinkedHashMap<>();
         attr.put("id", String.valueOf(orderId));
         Order order = orderMapper.getOrderByID(orderId);
         if (order == null) {
             return new Result("error", attr, "Transaction does not exist", new ArrayList<>());
+        }
+        if (order.getAccountId() == inputAccountId) {
+            return new Result("error", attr, "It is only allowed to cancel your own orders", new ArrayList<>());
         }
         try{
           while (true) {
