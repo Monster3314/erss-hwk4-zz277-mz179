@@ -32,7 +32,6 @@ public class Task implements Runnable {
         while(true){
             try {
                 if ((temp = bufferedReader.readLine()) == null) break;
-                System.out.println(temp);
                 sb.append(temp);
             } catch (IOException e) {
                 e.printStackTrace();
