@@ -190,48 +190,86 @@ public class NIOServer {
             Socket socket = null;
             while(true){
                 socket = serverSocket.accept();
-                executor.execute(new Runnable() {
+				Socket finalSocket = socket;
+				executor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        InputStream inputStream=socket.getInputStream();//得到一个输入流，接收客户端传递的信息
-                        InputStreamReader inputStreamReader=new InputStreamReader(inputStream);//提高效率，将自己字节流转为字符流
+						InputStream inputStream= null;//得到一个输入流，接收客户端传递的信息
+						try {
+							inputStream = finalSocket.getInputStream();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						InputStreamReader inputStreamReader=new InputStreamReader(inputStream);//提高效率，将自己字节流转为字符流
                         BufferedReader bufferedReader=new BufferedReader(inputStreamReader);//加入缓冲区
                         String temp=null;
                         StringBuilder sb = new StringBuilder();
-                        while((temp=bufferedReader.readLine())!=null){
-                            sb.append(temp);
+                        while(true){
+							try {
+								if ((temp = bufferedReader.readLine()) == null) break;
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							sb.append(temp);
                         }
-                        XmlParser parser = new XmlParser();
-                        Request req = parser.parse(new ByteArrayInputStream(sb.toString().getBytes()));
+						XmlParser parser = null;
+						try {
+							parser = new XmlParser();
+						} catch (ParserConfigurationException | TransformerConfigurationException e) {
+							e.printStackTrace();
+						}
+						Request req = parser.parse(new ByteArrayInputStream(sb.toString().getBytes()));
                         if (req == null) {
                             System.out.println("Malformed request");
                             return;
                         }
                         ArrayList<Result> res;
-                        RequestExecutor executor = new RequestExecutor();
-                        res = req.exec(executor);
+						RequestExecutor executor = null;
+						try {
+							executor = new RequestExecutor();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						res = req.exec(executor);
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        parser.CreateXmlResponse(baos, res);
-                        sb.setLength(0);
+						try {
+							parser.CreateXmlResponse(baos, res);
+						} catch (TransformerException e) {
+							e.printStackTrace();
+						}
+						sb.setLength(0);
                         String ans = new String(baos.toByteArray());
                         sb.append(ans.length() + System.lineSeparator());
                         sb.append(ans);
                         String resp = sb.toString();
-                        OutputStream outputStream=socket.getOutputStream();//获取一个输出流，向服务端发送信息
-                        PrintWriter printWriter=new PrintWriter(outputStream);//将输出流包装成打印流
+						OutputStream outputStream= null;//获取一个输出流，向服务端发送信息
+						try {
+							outputStream = finalSocket.getOutputStream();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						PrintWriter printWriter=new PrintWriter(outputStream);//将输出流包装成打印流
                         printWriter.print(resp);
                         System.out.println(resp);
                         printWriter.flush();
-                        socket.shutdownOutput();//关闭输出流
+						try {
+							finalSocket.shutdownOutput();//关闭输出流
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 
 
+						//关闭相对应的资源
+						try {
+							baos.close();
+							printWriter.close();
+							outputStream.close();
+							bufferedReader.close();
+							inputStream.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 
-                        //关闭相对应的资源
-                        baos.close();
-                        printWriter.close();
-                        outputStream.close();
-                        bufferedReader.close();
-                        inputStream.close();
                     }
                 });
             }
