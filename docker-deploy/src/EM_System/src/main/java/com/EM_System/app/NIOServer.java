@@ -194,14 +194,14 @@ public class NIOServer {
 				executor.execute(new Runnable() {
                     @Override
                     public void run() {
-						InputStream inputStream= null;//得到一个输入流，接收客户端传递的信息
+						InputStream inputStream= null;
 						try {
 							inputStream = finalSocket.getInputStream();
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-						InputStreamReader inputStreamReader=new InputStreamReader(inputStream);//提高效率，将自己字节流转为字符流
-                        BufferedReader bufferedReader=new BufferedReader(inputStreamReader);//加入缓冲区
+						InputStreamReader inputStreamReader=new InputStreamReader(inputStream);
+                        BufferedReader bufferedReader=new BufferedReader(inputStreamReader);
                         String temp=null;
                         StringBuilder sb = new StringBuilder();
                         while(true){
