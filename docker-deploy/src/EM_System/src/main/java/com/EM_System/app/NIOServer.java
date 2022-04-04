@@ -212,6 +212,7 @@ public class NIOServer {
 							}
 							sb.append(temp);
                         }
+             System.out.println(sb.toString());
 						XmlParser parser = null;
 						try {
 							parser = new XmlParser();
