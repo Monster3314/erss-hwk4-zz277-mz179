@@ -210,8 +210,9 @@ public class NIOServer {
                         ArrayList<Result> res;
                         RequestExecutor executor = new RequestExecutor();
                         res = req.exec(executor);
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         parser.CreateXmlResponse(baos, res);
-                        sb.length = 0;
+                        sb.setLength(0);
                         String ans = new String(baos.toByteArray());
                         sb.append(ans.length() + System.lineSeparator());
                         sb.append(ans);
@@ -226,6 +227,7 @@ public class NIOServer {
 
 
                         //关闭相对应的资源
+                        baos.close();
                         printWriter.close();
                         outputStream.close();
                         bufferedReader.close();
