@@ -27,11 +27,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
-
+/*
 public class NIOServer {
 
-    // public static final ExecutorService executor = Executors.newCachedThreadPool();
-    public static final ThreadPoolExecutor executor
+    public static final ExecutorService executor = Executors.newCachedThreadPool();
+    //public static final ThreadPoolExecutor executor
             = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     final InetAddress addr;
     final String SERVER_IP;
@@ -60,7 +60,7 @@ public class NIOServer {
 
         /**
          * SelectionKey.OP_ACCEPT get datagram </br>
-         */
+         *//*
         serverChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
@@ -116,7 +116,7 @@ public class NIOServer {
                                     XmlParser parser = new XmlParser();
                                     Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
                                     if (req == null) {
-                                        System.out.println("Malformed request");
+                                        System.out.println("Malformed request")；
                                         key.cancel();
                                         baos.close();
                                         return;
@@ -168,8 +168,8 @@ public class NIOServer {
             e.printStackTrace();
         }
     }
-}
-/*
+}*/
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
