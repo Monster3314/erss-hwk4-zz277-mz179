@@ -29,9 +29,10 @@ import javax.xml.transform.TransformerException;
 
 
 public class NIOServer {
-
-    public static final ThreadPoolExecutor executor
-            = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+    
+    public static final ExecutorService executor = Executors.newCachedThreadPool();
+    //public static final ThreadPoolExecutor executor
+    //        = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     final InetAddress addr;
     final String SERVER_IP;
     public static final int SERVER_PORT = 12345;
