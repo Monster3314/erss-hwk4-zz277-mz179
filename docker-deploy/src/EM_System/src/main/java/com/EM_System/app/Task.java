@@ -26,23 +26,14 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        byte[] datalen = new byte[4];
+        inputStream.read(datalen);
+        int length = byteArrayToInt(datalen)
+        byte[] data = new byte[length];
+        inputStream.read(data);
+        String recv = new String(data);
         ByteBuffer buffer = ByteBuffer.allocate(65535);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int len = 0;
-        while (true) {
-            buffer.clear();
-            try {
-                len = inputStream.read(buffer.array());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (len < 1)
-                break;
-            buffer.flip();
-            while (buffer.hasRemaining()) {
-                baos.write(buffer.get());
-            }
-        }
         String recv = new String(baos.toByteArray()).toLowerCase();
         recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
         XmlParser parser = null;
