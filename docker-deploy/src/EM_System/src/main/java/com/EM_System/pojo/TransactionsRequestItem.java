@@ -8,15 +8,18 @@ public class TransactionsRequestItem {
     int orderId;
     Order order;
     short type;
+    int accountId;
 
-    public TransactionsRequestItem(short type, int orderId) {
+    public TransactionsRequestItem(short type, int orderId, int accountId) {
         this.orderId = orderId;
         this.type = type;
+        this.accountId = accountId;
     }
 
-    public TransactionsRequestItem(short type, Order order) {
+    public TransactionsRequestItem(short type, Order order, int accountId) {
         this.order = order;
         this.type = type;
+        this.accountId = accountId;
     }
 
     public int getOrderId() {
@@ -29,6 +32,10 @@ public class TransactionsRequestItem {
 
     public short getType() {
         return type;
+    }
+
+    public int getAccountId() {
+        return accountId;
     }
 
     @Override

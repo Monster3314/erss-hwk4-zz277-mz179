@@ -20,6 +20,10 @@ public class TransactionsRequest implements Request{
     public ArrayList<Result> exec(RequestExecutor executor) {
         ArrayList<Result> results = new ArrayList<>();
         for (TransactionsRequestItem item : requestItems) {
+            if (item == null) {
+                results.add(new Result());
+                continue;
+            }
             short type = item.getType();
             if (type == TransactionsRequestItem.ORDER) {
                 results.add(executor.executeOrder(item.getOrder()));
@@ -28,7 +32,7 @@ public class TransactionsRequest implements Request{
                 results.add(executor.executeQuery(item.getOrderId()));
             }
             else if (type == TransactionsRequestItem.CANCEL) {
-                results.add(executor.executeCancel(item.getOrderId()));
+                results.add(executor.executeCancel(item.getOrderId(), item.getAccountId()));
             }
         }
         return results;

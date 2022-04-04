@@ -122,22 +122,31 @@ public class XmlParser {
                             String sym = order.getAttribute("sym");
                             int amount = Integer.parseInt(order.getAttribute("amount"));
                             double limit = Double.parseDouble(order.getAttribute("limit"));
+                            if (limit < 0 || amount == 0 || !StringUtils.isAlphanumeric(sym) || sym.isEmpty()) {
+                                throw new NumberFormatException();
+                            }
                             Order toCreate = new Order(amount, limit, sym, accountId);
-                            requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.ORDER, toCreate));
+                            requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.ORDER, toCreate, accountId));
                         }
                         case "query" -> {
                             int id = Integer.parseInt(order.getAttribute("id"));
-                            requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.QUERY, id));
+                            if (id < 0) {
+                                throw new NumberFormatException();
+                            }
+                            requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.QUERY, id, accountId));
                         }
                         case "cancel" -> {
                             int id = Integer.parseInt(order.getAttribute("id"));
-                            requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.CANCEL, id));
+                            if (id < 0) {
+                                throw new NumberFormatException();
+                            }
+                            requestItems.add(new TransactionsRequestItem(TransactionsRequestItem.CANCEL, id, accountId));
                         }
                     }
                 }
                 catch (NumberFormatException e) {
                     // TODO: no error massage here
-                    // requestItems.add(null);
+                     requestItems.add(null);
                 }
             }
         }
