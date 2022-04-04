@@ -70,7 +70,7 @@ public class NIOClient
                                   client.sendAndRecv(client.getStringFromDocument(client.createAccount(tempAccount, 10000)));
                                   client.sendAndRecv(client.getStringFromDocument(client.addPosition(tempAccount, "sym", rand.nextInt(100))));
                                   client.sendAndRecv(client.getStringFromDocument(client.createOrder(5, tempAccount, rand.nextInt(100), 10.0 * rand.nextDouble())));
-                                  client.sendAndRecv(client.getStringFromDocument(client.createQuery(rand.nextInt(100), tempAccount));
+                                  client.sendAndRecv(client.getStringFromDocument(client.createQuery(rand.nextInt(100), tempAccount)));
                               } catch(Exception e){
                                 System.out.println(e.getClass());
                               }
