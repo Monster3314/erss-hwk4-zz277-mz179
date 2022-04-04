@@ -154,6 +154,32 @@ public class NIOClient
         return element;
     }
 
+    public DOMSource createQuery(int num, int accountId) {
+        Document document = builder.newDocument();
+        Element root = document.createElement("transactions");
+        document.appendChild(root);
+
+        Attr attr = document.createAttribute("id");
+        attr.setValue(String.valueOf(accountId));
+        root.setAttributeNode(attr);
+
+        for (int i = 0; i < num; i++) {
+            root.appendChild(createQueryElement(document, i));
+        }
+
+        return new DOMSource(document);
+    }
+
+    public Element createQueryElement(Document document, int id) {
+        Element element = document.createElement("query");
+
+        Attr symAttr = document.createAttribute("id");
+        symAttr.setValue(String.valueOf(id));
+        element.setAttributeNode(symAttr);
+
+        return element;
+    }
+
     public String getStringFromDocument(DOMSource source) throws TransformerException {
         StringWriter writer = new StringWriter();
         StreamResult result = new StreamResult(writer);

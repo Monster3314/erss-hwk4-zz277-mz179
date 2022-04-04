@@ -1,6 +1,7 @@
 package com.EM_System;
 
 import com.EM_System.pojo.*;
+import org.codehaus.plexus.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -63,11 +64,14 @@ public class XmlParser {
                     try {
                         int id = Integer.parseInt(account.getAttribute("id"));
                         double balance = Double.parseDouble(account.getAttribute("balance"));
+                        if (id < 0 || balance < 0) {
+                            throw new NumberFormatException();
+                        }
                         requestItems.add(new Account(id, balance));
                     }
                     catch (NumberFormatException e) {
                         // TODO: no error massage here
-                        // requestItems.add(null);
+                         requestItems.add(null);
                     }
                 } else if (name.equals("symbol")) {
                     Element symbol = (Element) node;
@@ -80,11 +84,14 @@ public class XmlParser {
                             try {
                                 int id = Integer.parseInt(sym.getAttribute("id"));
                                 int num = Integer.parseInt(sym.getTextContent());
+                                if (id < 0 || num < 0 || !StringUtils.isAlphanumeric(symName) || symName.isEmpty()) {
+                                    throw new NumberFormatException();
+                                }
                                 requestItems.add(new Position(id, num, symName));
                             }
                             catch (NumberFormatException e) {
                                 // TODO: no error massage here
-                                // requestItems.add(null);
+                                 requestItems.add(null);
                             }
                         }
                     }

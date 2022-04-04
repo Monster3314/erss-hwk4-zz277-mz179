@@ -21,6 +21,13 @@ public class Result {
         this.results = results;
     }
 
+    public Result() {
+        this.tagName = "error";
+        this.attributes = new LinkedHashMap<>();
+        this.msg = "Invalid input";
+        this.results = new ArrayList<>();
+    }
+
     public Element getDomElement(Document document) {
         Element element = document.createElement(tagName);
 

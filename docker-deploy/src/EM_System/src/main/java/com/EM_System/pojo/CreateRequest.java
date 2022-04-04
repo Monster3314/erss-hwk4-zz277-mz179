@@ -20,7 +20,12 @@ public class CreateRequest implements Request{
     public ArrayList<Result> exec(RequestExecutor executor) {
         ArrayList<Result> results = new ArrayList<>();
         for (CreateRequestItem item : requestItems) {
-            results.add(item.exec(executor));
+            if (item == null) {
+                results.add(new Result());
+            }
+            else {
+                results.add(item.exec(executor));
+            }
         }
         return results;
     }
