@@ -173,27 +173,15 @@ public class NIOServer {
 }*/
 
  
-import com.EM_System.XmlParser;
-import com.EM_System.pojo.Request;
-import com.EM_System.pojo.Result;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 import java.util.Iterator;
  
-public class NIOServer {
+public class ChatServer {
  
 	/**
 	 * @param args
@@ -265,6 +253,7 @@ public class NIOServer {
                   Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
                   if (req == null) {
                       System.out.println("Malformed request");
+                      it.remove();
                       baos.close();
                       return;
                   }
@@ -289,7 +278,7 @@ public class NIOServer {
 							}
 						}
 					}
-				} catch (IOException | ParserConfigurationException | TransformerException e) {
+				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
