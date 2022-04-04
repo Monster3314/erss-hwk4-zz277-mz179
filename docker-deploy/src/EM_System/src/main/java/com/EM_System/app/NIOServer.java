@@ -117,6 +117,8 @@ public class NIOServer {
                                     Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
                                     if (req == null) {
                                         System.out.println("Malformed request");
+                                        key.cancel();
+                                        bao.close();
                                         return;
                                     }
                                     ArrayList<Result> res;
@@ -143,7 +145,6 @@ public class NIOServer {
                         SocketChannel channel = (SocketChannel) key.channel();
                         String resp = (String) key.attachment();
                         channel.write(ByteBuffer.wrap(resp.getBytes()));
-                        channel.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
