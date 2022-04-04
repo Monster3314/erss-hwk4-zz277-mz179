@@ -1,5 +1,0 @@
-<transactions id="123456">
-    <order sym="SYM" amount="100" limit="123.45"/>
-    <query id="12345"/>
-    <cancel id="54321"/>
-</transactions>
