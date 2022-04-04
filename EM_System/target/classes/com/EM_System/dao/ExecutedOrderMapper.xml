@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.EM_System.dao.ExecutedOrderMapper">
+    <select id="getExecutedOrderByOrderID" resultType="com.EM_System.pojo.ExecutedOrder" parameterType="int" resultMap="MyFull">
+        select *
+        from EM_System.ExecutedOrder
+        where buy_id = #{order_id} or sell_id = #{order_id};
+    </select>
+
+    <insert id="createExecutedOrder" parameterType="com.EM_System.pojo.ExecutedOrder">
+        insert into EM_System.ExecutedOrder
+            (amount, price, buy_id, sell_id, time)
+        values (#{amount}, #{price}, #{buy_id}, #{sell_id}, #{timestamp});
+    </insert>
+
+
+    <resultMap id="MyFull" type="com.EM_System.pojo.ExecutedOrder">
+        <id property="order_id" column="order_id"></id>
+        <result property="amount" column="amount"></result>
+        <result property="price" column="price"></result>
+        <result property="buy_id" column="buy_id"></result>
+        <result property="sell_id" column="sell_id"></result>
+        <result property="timestamp" column="time"></result>
+    </resultMap>
+
+</mapper>
+
+
