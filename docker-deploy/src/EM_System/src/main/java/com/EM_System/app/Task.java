@@ -40,6 +40,7 @@ public class Task implements Runnable {
             e.printStackTrace();
         }
         String recv = new String(data);
+        System.out.println(recv);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XmlParser parser = null;
         try {
