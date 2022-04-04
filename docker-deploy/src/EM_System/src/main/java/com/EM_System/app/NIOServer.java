@@ -30,9 +30,9 @@ import javax.xml.transform.TransformerException;
 
 public class NIOServer {
 
-    public static final ExecutorService executor = Executors.newCachedThreadPool();
-    //public static final ThreadPoolExecutor executor
-    //        = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+    // public static final ExecutorService executor = Executors.newCachedThreadPool();
+    public static final ThreadPoolExecutor executor
+            = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     final InetAddress addr;
     final String SERVER_IP;
     public static final int SERVER_PORT = 12345;
@@ -116,10 +116,8 @@ public class NIOServer {
                                     XmlParser parser = new XmlParser();
                                     Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
                                     if (req == null) {
-                                        System.out.println("Malformed request");
-                                        key.interestOps(0);
+                                        System.out.println("Malformed request")；
                                         key.cancel();
-                                        key.channel().close();
                                         baos.close();
                                         return;
                                     }
@@ -143,10 +141,10 @@ public class NIOServer {
                             }
                         });
                     } else if (key.isWritable()) {
+                        key.cancel();
                         SocketChannel channel = (SocketChannel) key.channel();
                         String resp = (String) key.attachment();
                         channel.write(ByteBuffer.wrap(resp.getBytes()));
-                        key.interestOps(SelectionKey.OP_READ);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
