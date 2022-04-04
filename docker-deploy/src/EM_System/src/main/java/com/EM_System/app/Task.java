@@ -45,7 +45,6 @@ public class Task implements Runnable {
         }
         String recv = new String(data);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
         XmlParser parser = null;
         try {
             parser = new XmlParser();
