@@ -119,7 +119,6 @@ public class NIOServer {
                                         System.out.println("Malformed request");
                                         key.interestOps(0);
                                         key.cancel();
-                                        key.channel().close();
                                         baos.close();
                                         return;
                                     }
@@ -171,6 +170,7 @@ public class NIOServer {
         }
     }
 }*/
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -180,23 +180,18 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class NIOServer {
+public class Task implements Runnable {
+    private Socket socket;
 
-    public static final ExecutorService executor = Executors.newCachedThreadPool();
+    public Task(Socket socket) {
+        this.socket = socket;
+    }
 
-    public static void main(String[] args) {
-        try{
-            ServerSocket serverSocket = new ServerSocket(12345);
-            Socket socket = null;
-            while(true){
-                socket = serverSocket.accept();
-				Socket finalSocket = socket;
-				executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-						InputStream inputStream= null;
+    public void run() {
+        try {
+            InputStream inputStream= null;
 						try {
-							inputStream = finalSocket.getInputStream();
+							inputStream = this.socket.getInputStream();
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -207,10 +202,12 @@ public class NIOServer {
                         while(true){
 							try {
 								if ((temp = bufferedReader.readLine()) == null) break;
+                System.out.println(temp);
+                sb.append(temp);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-							sb.append(temp);
+							
                         }
              System.out.println(sb.toString());
 						XmlParser parser = null;
@@ -220,11 +217,11 @@ public class NIOServer {
 							e.printStackTrace();
 						}
 						Request req = parser.parse(new ByteArrayInputStream(sb.toString().getBytes()));
-                        if (req == null) {
-                            System.out.println("Malformed request");
-                            return;
-                        }
-                        ArrayList<Result> res;
+            if (req == null) {
+                System.out.println("Malformed request");
+                return;
+            }
+            ArrayList<Result> res;
 						RequestExecutor executor = null;
 						try {
 							executor = new RequestExecutor();
@@ -239,13 +236,13 @@ public class NIOServer {
 							e.printStackTrace();
 						}
 						sb.setLength(0);
-                        String ans = new String(baos.toByteArray());
-                        sb.append(ans.length() + System.lineSeparator());
-                        sb.append(ans);
-                        String resp = sb.toString();
+            String ans = new String(baos.toByteArray());
+            sb.append(ans.length() + System.lineSeparator());
+            sb.append(ans);
+            String resp = sb.toString();
 						OutputStream outputStream= null;//获取一个输出流，向服务端发送信息
 						try {
-							outputStream = finalSocket.getOutputStream();
+							outputStream = this.socket.getOutputStream();
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -270,9 +267,24 @@ public class NIOServer {
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
 
-                    }
-                });
+public class NIOServer {
+
+    public static final ExecutorService executor = Executors.newCachedThreadPool();
+
+    public static void main(String[] args) {
+        try{
+            ServerSocket serverSocket = new ServerSocket(12345);
+            Socket socket = null;
+            while(true){
+                socket = serverSocket.accept();
+        				Task task = new Task(socket);
+                executer.execute(task);
             }
         }catch(IOException e){
             e.printStackTrace();
