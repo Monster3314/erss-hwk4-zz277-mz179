@@ -26,21 +26,15 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        int length = 0;
-        try {
-            length = Integer.parseInt(br.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
+        BufferedReader br = new BufferedReader(inputStream);
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null){
+            sb.append(line);
         }
-        byte[] data = new byte[length*2];
-        try {
-            inputStream.read(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String recv = new String(data);
-        System.out.println(recv);
+        String recv = sb.toString();
+        recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
+        br.setLength(0);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XmlParser parser = null;
         try {
@@ -72,7 +66,6 @@ public class Task implements Runnable {
         } catch (TransformerException e) {
             e.printStackTrace();
         }
-        StringBuilder sb = new StringBuilder();
         sb.delete(0, sb.length());
         String ans = new String(baos.toByteArray());
         System.out.println(ans.length());
