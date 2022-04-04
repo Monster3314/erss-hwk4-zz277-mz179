@@ -116,7 +116,7 @@ public class NIOServer {
                                     XmlParser parser = new XmlParser();
                                     Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
                                     if (req == null) {
-                                        System.out.println("Malformed request")；
+                                        System.out.println("Malformed request");
                                         key.cancel();
                                         baos.close();
                                         return;
