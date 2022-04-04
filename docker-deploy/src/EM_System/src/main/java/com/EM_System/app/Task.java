@@ -75,10 +75,10 @@ public class Task implements Runnable {
         }
         sb.delete(0, sb.length());
         String ans = new String(baos.toByteArray());
-        System.out.println(ans.length());
         sb.append(ans.length() + System.lineSeparator());
         sb.append(ans);
         String resp = sb.toString();
+        System.out.println(resp);
         OutputStream outputStream= null;//获取一个输出流，向服务端发送信息
         try {
             outputStream = this.socket.getOutputStream();
