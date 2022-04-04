@@ -11,7 +11,6 @@ com/EM_System/pojo/CreateRequestItem.class
 com/EM_System/dao/AccountMapper.class
 com/EM_System/pojo/TransactionsRequest.class
 com/EM_System/pojo/Account.class
-com/EM_System/app/NIOServer$1.class
 com/EM_System/pojo/Result.class
 com/EM_System/pojo/Order.class
 com/EM_System/XmlParser.class
