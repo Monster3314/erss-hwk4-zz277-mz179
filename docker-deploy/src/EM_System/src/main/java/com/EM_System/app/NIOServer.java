@@ -123,7 +123,6 @@ public class NIOServer {
                                         } catch (IOException e1) {
                                             e1.printStackTrace();
                                         }
-                                        keys.remove();
                                         baos.close();
                                         return;
                                     }
