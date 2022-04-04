@@ -65,8 +65,9 @@ public class Task implements Runnable {
         } catch (TransformerException e) {
             e.printStackTrace();
         }
-        sb.setLength(0);
+        sb.delete(0, sb.length());
         String ans = new String(baos.toByteArray());
+        System.out.println(ans.length());
         sb.append(ans.length() + System.lineSeparator());
         sb.append(ans);
         String resp = sb.toString();
@@ -78,7 +79,6 @@ public class Task implements Runnable {
         }
         PrintWriter printWriter=new PrintWriter(outputStream);//将输出流包装成打印流
         printWriter.print(resp);
-        System.out.println(resp);
         printWriter.flush();
         try {
             socket.shutdownOutput();//关闭输出流
