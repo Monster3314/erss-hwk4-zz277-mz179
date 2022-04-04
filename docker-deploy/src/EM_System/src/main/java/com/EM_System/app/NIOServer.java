@@ -31,8 +31,6 @@ import javax.xml.transform.TransformerException;
 public class NIOServer {
 
     public static final ExecutorService executor = Executors.newCachedThreadPool();
-    //public static final ThreadPoolExecutor executor
-//            = new ThreadPoolExecutor (8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     final InetAddress addr;
     final String SERVER_IP;
     public static final int SERVER_PORT = 12345;
@@ -62,11 +60,13 @@ public class NIOServer {
          * SelectionKey.OP_ACCEPT get datagram </br>
          */
         serverChannel.register(selector, SelectionKey.OP_ACCEPT);
-
+        long startTime=System.currentTimeMillis(); 
         while (true) {
             // System.out.println("Listening on：" + serverPort);
             // 6.Join here, until qualified channel appeared
             if (selector.select() <= 0) {
+                long endTime=System.currentTimeMillis();
+                System.out.println((endTime - startTime)+"ms");
                 continue;
             }
 
@@ -77,13 +77,10 @@ public class NIOServer {
                 keys.remove();
 
                 try {
-                    // 判断事件类型，做对应的处理
                     if (key.isAcceptable()) {
-                        // 取得可以操作的channel, 调用accept完成三次握手，返回与客户端可以通信的channel，并设置为非阻塞
                         ServerSocketChannel server = (ServerSocketChannel) key.channel();
                         SocketChannel channel = server.accept();
                         channel.configureBlocking(false);
-                        System.out.println("Handling requests：" + channel.getRemoteAddress());
                         channel.register(selector, SelectionKey.OP_READ);
                     } else if (key.isReadable()) {
                         key.interestOps(SelectionKey.OP_CONNECT);
@@ -106,17 +103,14 @@ public class NIOServer {
                                             baos.write(buffer.get());
                                         }
                                     }
-                                    // ############# 业务处理开始 ############
                                     String recv = new String(baos.toByteArray()).toLowerCase();
                                     recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
-                                    System.out.println(recv);
                                     baos.flush();
                                     baos.reset();
-                                    // ############# 业务处理 结束 ############
                                     XmlParser parser = new XmlParser();
                                     Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
                                     if (req == null) {
-                                        System.out.println("Malformed request");
+                                        System.out.println("Malformed request")；
                                         key.cancel();
                                         baos.close();
                                         return;
@@ -130,8 +124,6 @@ public class NIOServer {
                                     sb.append(ans.length() + System.lineSeparator());
                                     sb.append(ans);
                                     String resp = sb.toString();
-                                    System.out.println(resp);
-                                    // 业务处理结果返回将数据添加到key中
                                     baos.close();
                                     key.attach(resp);
                                     key.interestOps(SelectionKey.OP_WRITE);
