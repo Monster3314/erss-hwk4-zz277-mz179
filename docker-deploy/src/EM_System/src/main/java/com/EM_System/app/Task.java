@@ -20,7 +20,7 @@ public class Task implements Runnable {
     }
     
     public static int byteArrayToInt(byte[] b){
-    	return b[3]&0xFF | (b[2]&0xFF) << 8 | (b[1]&0xFF) << 16 | (b[0]&0xFF) << 24 
+    	return b[3]&0xFF | (b[2]&0xFF) << 8 | (b[1]&0xFF) << 16 | (b[0]&0xFF) << 24;
     }
 
     public void run() {
@@ -31,14 +31,20 @@ public class Task implements Runnable {
             e.printStackTrace();
         }
         byte[] datalen = new byte[4];
-        inputStream.read(datalen);
-        int length = byteArrayToInt(datalen)
+        try {
+            inputStream.read(datalen);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int length = byteArrayToInt(datalen);
         byte[] data = new byte[length];
-        inputStream.read(data);
+        try {
+            inputStream.read(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         String recv = new String(data);
-        ByteBuffer buffer = ByteBuffer.allocate(65535);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        String recv = new String(baos.toByteArray()).toLowerCase();
         recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
         XmlParser parser = null;
         try {
