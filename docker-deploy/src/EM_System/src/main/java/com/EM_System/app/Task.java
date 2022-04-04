@@ -25,27 +25,29 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        InputStreamReader inputStreamReader=new InputStreamReader(inputStream);
+        ByteBuffer buffer = ByteBuffer.allocate(65535);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         BufferedReader bufferedReader=new BufferedReader(inputStreamReader);
-        String temp=null;
-        StringBuilder sb = new StringBuilder();
-        while(true){
-            try {
-                if ((temp = bufferedReader.readLine()) == null) break;
-                sb.append(temp);
-            } catch (IOException e) {
-                e.printStackTrace();
+        int len = 0;
+        while (true) {
+            buffer.clear();
+            len = inputeStream.read(buffer);
+            if (len < 1)
+                break;
+            buffer.flip();
+            while (buffer.hasRemaining()) {
+                baos.write(buffer.get());
             }
-
         }
-        System.out.println(sb.toString());
+        String recv = new String(baos.toByteArray()).toLowerCase();
+        recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
         XmlParser parser = null;
         try {
             parser = new XmlParser();
         } catch (ParserConfigurationException | TransformerConfigurationException e) {
             e.printStackTrace();
         }
-        Request req = parser.parse(new ByteArrayInputStream(sb.toString().getBytes()));
+        Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
         if (req == null) {
             System.out.println("Malformed request");
             return;
@@ -58,7 +60,8 @@ public class Task implements Runnable {
             e.printStackTrace();
         }
         res = req.exec(executor);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        baos.flush();
+        baos.reset();
         try {
             parser.CreateXmlResponse(baos, res);
         } catch (TransformerException e) {
