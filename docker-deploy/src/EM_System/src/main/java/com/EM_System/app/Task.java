@@ -26,15 +26,20 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        BufferedReader br = new BufferedReader(inputStream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder sb = new StringBuilder();
         String line;
-        while ((line = br.readLine()) != null){
-            sb.append(line);
+        try {
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+        }
+        catch (IOException e) {
+
         }
         String recv = sb.toString();
         recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
-        br.setLength(0);
+        sb.setLength(0);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XmlParser parser = null;
         try {
