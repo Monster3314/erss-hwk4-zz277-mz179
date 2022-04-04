@@ -28,8 +28,17 @@ public class Task implements Runnable {
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder sb = new StringBuilder();
-        String num = br.readLine();
-        String recv = br.readLine();
+        try {
+            String num = br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String recv = null;
+        try {
+            recv = br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println(recv);
         //recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
         sb.setLength(0);
