@@ -37,7 +37,7 @@ public class NIOClient
         words = words.length() + "\n" + words + "\n";
         byte[] msg = words.getBytes();
         ByteBuffer buffer = ByteBuffer.wrap(msg);
-        System.out.println("Client sending: " + words);
+        //System.out.println("Client sending: " + words);
         channel.write(buffer);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         int len = 0;
@@ -51,7 +51,7 @@ public class NIOClient
                 bos.write(buffer.get());
             }
         }
-        System.out.println("Client received:"+new String(bos.toByteArray()));
+        //System.out.println("Client received:"+new String(bos.toByteArray()));
     }
 
     public static void main(String[] args) throws IOException, ParserConfigurationException, TransformerException {
