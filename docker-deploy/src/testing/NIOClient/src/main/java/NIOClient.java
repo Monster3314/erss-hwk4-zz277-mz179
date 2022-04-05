@@ -58,7 +58,7 @@ public class NIOClient
         NIOClient client = new NIOClient();
         Random rand = new Random();
         long startTime=System.currentTimeMillis(); 
-        for(int i=0;i<10;i++){
+        for(int i=0;i<80;i++){
           executor.execute(new Runnable() {
                             @Override
                             public void run() {
@@ -66,12 +66,12 @@ public class NIOClient
                                   SocketChannel socketChannel=SocketChannel.open();
                                   socketChannel.connect(new InetSocketAddress("152.3.77.189", 12345));
                                   int tempAccount = rand.nextInt(1000);
-                                  int choice = rand.nextInt(4);
+                                  int choice = 3;
                                   switch (choice){
                                     case 0:client.sendAndRecv(client.getStringFromDocument(client.createAccount(tempAccount, 10000)), socketChannel);break;
                                     case 1:client.sendAndRecv(client.getStringFromDocument(client.addPosition(tempAccount, "sym", rand.nextInt(1000))), socketChannel);break;
                                     case 2:client.sendAndRecv(client.getStringFromDocument(client.createOrder(5, tempAccount, rand.nextInt(20)-10, 10000.0 * rand.nextDouble())), socketChannel);break;
-                                    case 3:client.sendAndRecv(client.getStringFromDocument(client.createQuery(rand.nextInt(100), tempAccount)), socketChannel);break;
+                                    case 3:client.sendAndRecv(client.getStringFromDocument(client.createQuery(rand.nextInt(100000), tempAccount)), socketChannel);break;
                                   }
                                   socketChannel.close();
                               } catch(Exception e){
