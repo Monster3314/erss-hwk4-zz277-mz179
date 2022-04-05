@@ -8,6 +8,10 @@ services:
       - MYSQL_DATABASE=mybatis
       - MYSQL_USER=test
       - MYSQL_PASSWORD=test
+    ports:
+      - "3306:3306"
+#    volumes:
+#      - /home/user/db/mysql/init:/docker-entrypoint-initdb.d/:ro
 
   server:
     build: ./src
