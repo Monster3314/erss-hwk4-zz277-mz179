@@ -181,7 +181,10 @@ public class NIOServer {
         try{
             ServerSocket serverSocket = new ServerSocket(12345);
             Socket socket = null;
+            long startTime=System.currentTimeMillis(); 
             while(true){
+                long endTime=System.currentTimeMillis();
+                System.out.println((endTime - startTime)+"ms");
                 socket = serverSocket.accept();
         				Task task = new Task(socket);
                 executor.execute(task);
