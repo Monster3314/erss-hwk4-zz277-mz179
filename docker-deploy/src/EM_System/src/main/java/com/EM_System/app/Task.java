@@ -39,7 +39,7 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(recv);
+        //System.out.println(recv);
         //recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
         sb.setLength(0);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -78,7 +78,7 @@ public class Task implements Runnable {
         sb.append(ans.length() + System.lineSeparator());
         sb.append(ans);
         String resp = sb.toString();
-        System.out.println(resp);
+        //System.out.println(resp);
         OutputStream outputStream= null;//获取一个输出流，向服务端发送信息
         try {
             outputStream = this.socket.getOutputStream();
