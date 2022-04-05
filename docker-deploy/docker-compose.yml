@@ -5,13 +5,14 @@ services:
     image: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=test
-      - MYSQL_DATABASE=mybatis
+      - MYSQL_DATABASE=EM_System
       - MYSQL_USER=test
       - MYSQL_PASSWORD=test
     ports:
       - "3306:3306"
-#    volumes:
-#      - /home/user/db/mysql/init:/docker-entrypoint-initdb.d/:ro
+    volumes:
+      - ./src/EM_System/src/main/resources/EM_System_SQL.txt:/docker-entrypoint-initdb.d/initial_db.sql
+      - data-volume=/var/lib/mysql/data
 
   server:
     build: ./src
