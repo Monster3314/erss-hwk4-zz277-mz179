@@ -27,7 +27,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
-
+/*
 public class NIOServer {
 
     public static final ExecutorService executor = Executors.newCachedThreadPool();
@@ -58,7 +58,7 @@ public class NIOServer {
 
         /**
          * SelectionKey.OP_ACCEPT get datagram </br>
-         */
+         *//*
         serverChannel.register(selector, SelectionKey.OP_ACCEPT);
         long startTime=System.currentTimeMillis(); 
         while (true) {
@@ -160,8 +160,8 @@ public class NIOServer {
             e.printStackTrace();
         }
     }
-}
-/*
+}*/
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -191,4 +191,4 @@ public class NIOServer {
         }
     }
 
-}*/
+}
