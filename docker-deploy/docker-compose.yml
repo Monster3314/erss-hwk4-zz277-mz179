@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_DATABASE=mybatis
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=test
+
+  server:
+    build: ./src
+    ports:
+      - "12345:12345"
+    volumes:
+      - ./src:/code
+    depends_on:
+      - db
