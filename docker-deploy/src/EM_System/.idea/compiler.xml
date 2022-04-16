@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Exchange Matching System" />
         <module name="erss-hwk4-zz277-mz179" />
+        <module name="EM_System" />
       </profile>
     </annotationProcessing>
   </component>

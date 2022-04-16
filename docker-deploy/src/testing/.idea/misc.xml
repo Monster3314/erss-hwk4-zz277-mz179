@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/NIOClient/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="17" project-jdk-type="JavaSDK" />
+  <component name="UnattendedHostPersistenceState">
+    <option name="openedFilesInfos">
+      <list>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="2954" />
+          <option name="fileUrl" value="jar://$USER_HOME$/.jdks/openjdk-17.0.2/lib/src.zip!/java.base/java/lang/Runnable.java" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="3261" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/NIOClient/src/main/java/NIOClient.java" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="696" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/NIOClient/src/test/java/NIOClientTest.java" />
+        </OpenedFileInfo>
+      </list>
+    </option>
+  </component>
+</project>

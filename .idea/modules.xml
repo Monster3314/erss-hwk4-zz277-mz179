@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/docker-deploy/src/EM_System/EM_System.iml" filepath="$PROJECT_DIR$/docker-deploy/src/EM_System/EM_System.iml" />
+      <module fileurl="file://$PROJECT_DIR$/docker-deploy/src/testing/NIOClient/NIOClient.iml" filepath="$PROJECT_DIR$/docker-deploy/src/testing/NIOClient/NIOClient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/erss-hwk4-zz277-mz179.iml" filepath="$PROJECT_DIR$/.idea/erss-hwk4-zz277-mz179.iml" />
+    </modules>
+  </component>
+</project>

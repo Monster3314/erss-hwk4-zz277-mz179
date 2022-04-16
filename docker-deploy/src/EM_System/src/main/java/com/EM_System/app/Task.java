@@ -9,7 +9,6 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.*;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class Task implements Runnable {
@@ -27,21 +26,21 @@ public class Task implements Runnable {
             e.printStackTrace();
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        StringBuilder sb = new StringBuilder();
+        int byte_num = 0;
         try {
-            String num = br.readLine();
+            byte_num = Integer.parseInt(br.readLine());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String recv = null;
+        char []recv = new char[byte_num];
         try {
-            recv = br.readLine();
+            br.read(recv, 0, byte_num);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //System.out.println(recv);
-        //recv = recv.substring(recv.indexOf(System.lineSeparator()) + 1);
-        sb.setLength(0);
+        String receive = new String(recv);
+        receive = receive.trim().replaceFirst("^([\\W]+)<","<");
+//        System.out.println(receive);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XmlParser parser = null;
         try {
@@ -49,7 +48,7 @@ public class Task implements Runnable {
         } catch (ParserConfigurationException | TransformerConfigurationException e) {
             e.printStackTrace();
         }
-        Request req = parser.parse(new ByteArrayInputStream(recv.getBytes()));
+        Request req = parser.parse(new ByteArrayInputStream(receive.getBytes()));
         if (req == null) {
             System.out.println("Malformed request");
             return;
@@ -73,12 +72,12 @@ public class Task implements Runnable {
         } catch (TransformerException e) {
             e.printStackTrace();
         }
-        sb.delete(0, sb.length());
+        StringBuilder sb = new StringBuilder();
         String ans = new String(baos.toByteArray());
         sb.append(ans.length() + System.lineSeparator());
         sb.append(ans);
         String resp = sb.toString();
-        //System.out.println(resp);
+//        System.out.println(resp);
         OutputStream outputStream= null;//获取一个输出流，向服务端发送信息
         try {
             outputStream = this.socket.getOutputStream();

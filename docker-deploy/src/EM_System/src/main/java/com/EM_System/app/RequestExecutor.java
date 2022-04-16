@@ -104,7 +104,7 @@ public class RequestExecutor {
         if (order == null) {
             return new Result("error", attr, "Transaction does not exist", new ArrayList<>());
         }
-        if (order.getAccountId() == inputAccountId) {
+        if (order.getAccountId() != inputAccountId) {
             return new Result("error", attr, "It is only allowed to cancel your own orders", new ArrayList<>());
         }
         try{

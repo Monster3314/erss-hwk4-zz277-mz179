@@ -175,18 +175,21 @@ import java.net.Socket;
 
 public class NIOServer {
 
-    public static final ExecutorService executor = Executors.newCachedThreadPool();
+    public static final ExecutorService executor = Executors.newFixedThreadPool(9);
 
     public static void main(String[] args) {
         try{
             ServerSocket serverSocket = new ServerSocket(12345);
             Socket socket = null;
-            long startTime=System.currentTimeMillis(); 
+            long startTime = 0L;
             while(true){
                 long endTime=System.currentTimeMillis();
                 System.out.println((endTime - startTime)+"ms");
                 socket = serverSocket.accept();
-        				Task task = new Task(socket);
+                if(startTime == 0L){
+                    startTime = System.currentTimeMillis();
+                }
+                Task task = new Task(socket);
                 executor.execute(task);
             }
         }catch(IOException e){

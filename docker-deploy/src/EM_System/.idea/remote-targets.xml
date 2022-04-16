@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteTargetsManager">
+    <option name="projectDefaultTargetUuid" value="3a6871bc-f7d4-4ffc-a88f-c57393e5fbb6" />
+    <targets>
+      <target name="zz277@vcm-26331.vm.duke.edu:22" type="ssh/sftp" uuid="3a6871bc-f7d4-4ffc-a88f-c57393e5fbb6">
+        <config>
+          <option name="projectRootOnTarget" value="$USER_HOME$/EM_System" />
+          <option name="serverName" value="zz277@vcm-26331.vm.duke.edu:22 password" />
+          <option name="useRsync" value="true" />
+        </config>
+        <ContributedStateBase type="JavaLanguageRuntime">
+          <config>
+            <option name="javaVersionString" value="17.0.2" />
+          </config>
+        </ContributedStateBase>
+      </target>
+    </targets>
+  </component>
+</project>

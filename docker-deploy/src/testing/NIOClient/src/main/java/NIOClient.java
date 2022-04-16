@@ -64,7 +64,7 @@ public class NIOClient
                             public void run() {
                               try{
                                   SocketChannel socketChannel=SocketChannel.open();
-                                  socketChannel.connect(new InetSocketAddress("152.3.77.189", 12345));
+                                  socketChannel.connect(new InetSocketAddress("67.159.95.195", 12345));
                                   int tempAccount = rand.nextInt(1000);
                                   int choice = 3;
                                   switch (choice){

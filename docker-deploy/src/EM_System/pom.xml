@@ -38,10 +38,10 @@
     </plugins>
         <resources>
             <resource>
-                <directory>src/main/Java</directory>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
